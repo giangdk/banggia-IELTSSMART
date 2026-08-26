@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IELTSSMART — Bảng giá linh hoạt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0B2027; --ink2:#41565C; --ink3:#7A8D92;
+  --line:#DCE4E3; --line2:#EDF1F0;
+  --canvas:#EFF3F2; --surface:#FFFFFF;
+  --teal:#0E6E64; --teal-d:#0A5049; --teal-s:#E2F0ED;
+  --amber:#C9821B; --amber-s:#FBF1DE; --amber-l:#F2E0BE;
+  --rust:#AB4324; --rust-s:#FBEAE4;
+  --r:10px;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  --sans:'Be Vietnam Pro',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--canvas); color:var(--ink); font-family:var(--sans);
+  font-size:15px; line-height:1.5; -webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums;
+}
+.mono{font-family:var(--mono); font-variant-numeric:tabular-nums}
+.eyebrow{
+  font-family:var(--mono); font-size:11px; font-weight:500; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink3);
+}
+h1,h2,h3{margin:0; font-weight:800; letter-spacing:-.02em; line-height:1.15}
+a{color:var(--teal)}
+
+/* ---------- shell ---------- */
+.topbar{
+  background:var(--ink); color:#EAF0EF; padding:18px 0 20px;
+  border-bottom:3px solid var(--amber);
+}
+.inner{max-width:1200px; margin:0 auto; padding:0 24px}
+.brandrow{display:flex; align-items:flex-end; justify-content:space-between; gap:20px; flex-wrap:wrap}
+.brand{display:flex; align-items:center; gap:12px}
+.mark{
+  width:38px;height:38px;border-radius:9px;background:var(--amber);color:var(--ink);
+  display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:15px;
+  letter-spacing:-.03em;
+}
+.brand h1{font-size:20px;color:#fff}
+.brand p{margin:2px 0 0;font-size:12.5px;color:#8FA9AC}
+.topmeta{font-family:var(--mono);font-size:12px;color:#8FA9AC;text-align:right}
+.topmeta b{color:#fff;font-weight:500}
+
+.layout{max-width:1200px;margin:0 auto;padding:26px 24px 80px;display:grid;grid-template-columns:minmax(0,1fr) 372px;gap:26px;align-items:start}
+@media(max-width:980px){.layout{grid-template-columns:1fr;padding-bottom:40px}}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.card + .card{margin-top:18px}
+.card > h2{font-size:16px;margin-bottom:3px}
+.card > .sub{font-size:13px;color:var(--ink2);margin:0 0 16px}
+
+/* ---------- signature: thang bậc giá ---------- */
+.ladder-card{padding-bottom:14px}
+.ladder{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;height:212px;margin-top:18px}
+.step{
+  display:flex;flex-direction:column;justify-content:flex-end;height:100%;
+  cursor:pointer;border:0;background:none;padding:0;font-family:inherit;text-align:left;
+}
+.step-badge{
+  align-self:flex-start;font-family:var(--mono);font-size:11px;font-weight:600;
+  background:var(--amber-s);color:var(--amber);border:1px solid var(--amber-l);
+  padding:1px 6px;border-radius:5px;margin-bottom:6px;
+}
+.step-badge.is-base{background:var(--line2);color:var(--ink3);border-color:var(--line)}
+.step-track{flex:1 1 auto;position:relative;min-height:64px}
+.step-bar{
+  position:absolute;left:0;right:0;bottom:0;
+  background:var(--teal-s);border:1px solid #CFE3DF;border-bottom:0;
+  border-radius:8px 8px 0 0;padding:10px 10px 12px;
+  transition:background .25s ease,border-color .25s ease,transform .25s ease;
+  display:flex;flex-direction:column;justify-content:flex-end;min-height:58px;
+}
+.step-price{font-family:var(--mono);font-size:16px;font-weight:600;color:var(--teal-d);letter-spacing:-.02em}
+.step-unit{font-size:10.5px;color:var(--ink3);margin-top:1px}
+.step-range{font-family:var(--mono);font-size:11.5px;color:var(--ink2);padding:8px 2px 0;border-top:2px solid var(--line);white-space:nowrap;line-height:1.6}
+.step-min{font-size:10.5px;color:var(--ink3)}
+.step.active .step-min{color:var(--amber)}
+.step-no{font-family:var(--mono);font-size:10.5px;color:var(--ink3);letter-spacing:.08em}
+.step.active .step-bar{background:var(--teal);border-color:var(--teal);transform:translateY(-3px)}
+.step.active .step-price{color:#fff}
+.step.active .step-unit{color:#A9CFC9}
+.step.active .step-range{border-top-color:var(--amber);color:var(--ink)}
+.step.active .step-badge{background:var(--amber);color:#fff;border-color:var(--amber)}
+.step:not(.active):hover .step-bar{background:#D6E8E4}
+.ladder-note{margin-top:14px;font-size:12.5px;color:var(--ink2);display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.ladder-note b{font-weight:600;color:var(--ink)}
+@media(max-width:640px){
+  .ladder{height:auto;grid-template-columns:1fr;gap:8px}
+  .step{flex-direction:row;align-items:center;gap:10px;height:auto;border-bottom:1px solid var(--line2);padding-bottom:8px}
+  .step-track{flex:1 1 auto;min-height:0;height:52px}
+  .step-bar{height:100%!important;min-height:0;border-radius:8px;border-bottom:1px solid #CFE3DF;padding:8px 10px}
+  .step-badge{margin:0;flex:none;width:62px;text-align:center}
+  .step-range{border-top:0;padding:0;width:92px;flex:none;order:-1}
+}
+
+/* ---------- controls ---------- */
+.field{padding:16px 0;border-top:1px solid var(--line2)}
+.field:first-of-type{border-top:0;padding-top:2px}
+.field-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:3px}
+.field-head label{font-weight:600;font-size:14.5px}
+.field-hint{font-size:12.5px;color:var(--ink3);margin:0 0 10px}
+.rowc{display:flex;align-items:center;gap:14px}
+input[type=range]{
+  flex:1;-webkit-appearance:none;appearance:none;height:4px;border-radius:3px;
+  background:linear-gradient(var(--teal),var(--teal)) 0/var(--fill,0%) 100% no-repeat,var(--line);
+  outline:none;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--surface);
+  border:2px solid var(--teal);cursor:pointer;box-shadow:0 1px 3px rgba(11,32,39,.22);
+}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid var(--teal);cursor:pointer}
+input[type=range]:focus-visible{box-shadow:0 0 0 3px var(--teal-s)}
+.numbox{
+  width:112px;flex:none;font-family:var(--mono);font-size:15px;font-weight:600;text-align:center;
+  padding:9px 8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);
+}
+.numbox:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-s)}
+.unit{flex:none;width:88px;font-size:12px;color:var(--ink3);line-height:1.25}
+.scale{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:11px;color:var(--ink3);margin-top:6px}
+.scale span:nth-child(2){color:var(--teal);font-weight:500;text-align:center;flex:1}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.chip{
+  font-family:var(--mono);font-size:12px;padding:4px 10px;border-radius:999px;cursor:pointer;
+  border:1px solid var(--line);background:var(--surface);color:var(--ink2);
+}
+.chip:hover{border-color:var(--teal);color:var(--teal)}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+
+.incl{
+  display:flex;gap:9px;align-items:flex-start;background:var(--teal-s);border:1px solid #CFE3DF;
+  border-radius:8px;padding:9px 12px;font-size:13px;color:var(--teal-d);margin-bottom:10px;
+}
+.incl .tick{font-weight:700;line-height:1.35}
+.incl b{font-family:var(--mono);font-weight:600}
+
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{
+  flex:1;min-width:78px;padding:10px 8px;border-radius:8px;border:1px solid var(--line);
+  background:var(--surface);cursor:pointer;font-family:inherit;color:var(--ink);text-align:center;
+}
+.seg button:hover{border-color:var(--teal)}
+.seg button.on{border-color:var(--ink);background:var(--ink);color:#fff}
+.seg .t{font-size:13.5px;font-weight:600;display:block}
+.seg .d{font-family:var(--mono);font-size:11.5px;color:var(--amber);display:block;margin-top:2px}
+.seg button.on .d{color:var(--amber-l)}
+
+.feat-lead{
+  display:flex;gap:11px;align-items:flex-start;background:var(--amber-s);border:1px solid var(--amber-l);
+  border-radius:8px;padding:13px 15px;margin-bottom:16px;
+}
+.feat-lead .tick{color:var(--amber);font-size:13px;line-height:1.5}
+.feat-lead b{display:block;font-size:14.5px;color:#6E4A0F;letter-spacing:-.01em}
+.feat-lead span{display:block;font-size:13px;color:#7C5A22;margin-top:3px;line-height:1.5}
+.feats{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:9px 22px}
+@media(max-width:700px){.feats{grid-template-columns:1fr}}
+.feats li{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;color:var(--ink2);line-height:1.45}
+.feats li::before{content:"✓";color:var(--teal);font-weight:700;font-size:12px;line-height:1.55;flex:none}
+
+.switch{display:flex;gap:0;border:1px solid var(--line);border-radius:8px;overflow:hidden;width:fit-content}
+.switch button{padding:7px 14px;border:0;background:var(--surface);cursor:pointer;font-family:inherit;font-size:13px;color:var(--ink2)}
+.switch button.on{background:var(--ink);color:#fff;font-weight:600}
+
+
+/* ---------- invoice rail ---------- */
+.rail{position:sticky;top:22px}
+@media(max-width:980px){.rail{position:static}}
+.invoice{background:var(--ink);color:#E9EFEE;border-radius:var(--r);padding:20px;border:1px solid var(--ink)}
+.invoice h2{font-size:15px;color:#fff;margin-bottom:14px}
+.li{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px dashed rgba(255,255,255,.14);font-size:13.5px;align-items:baseline}
+.li .k{color:#A9BEC1}
+.li .k small{display:block;color:#7A9296;font-size:11.5px;margin-top:1px}
+.li .v{font-family:var(--mono);font-size:14px;color:#fff;white-space:nowrap}
+.li.free .v{color:#7FC9BB}
+.li.zero{opacity:.45}
+.anchor-line{display:flex;justify-content:space-between;gap:14px;padding:12px 0 0;font-size:13px;color:#A9BEC1}
+.anchor-line .v{font-family:var(--mono);text-decoration:line-through;color:#7A9296}
+.save{
+  margin-top:12px;background:var(--amber);color:#25180A;border-radius:8px;padding:9px 12px;
+  display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:600;
+}
+.save .v{font-family:var(--mono)}
+.total{margin-top:14px;padding-top:14px;border-top:2px solid rgba(255,255,255,.22)}
+.total .lbl{font-size:12px;color:#A9BEC1;letter-spacing:.04em}
+.total .big{font-family:var(--mono);font-size:31px;font-weight:600;color:#fff;letter-spacing:-.03em;line-height:1.1;margin-top:2px}
+.total .per{font-size:12.5px;color:#8FA9AC;margin-top:4px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.stat{background:rgba(255,255,255,.06);border-radius:8px;padding:10px 11px}
+.stat .lbl{font-size:11px;color:#8FA9AC;line-height:1.3}
+.stat .v{font-family:var(--mono);font-size:15px;color:#fff;margin-top:3px}
+.acts{display:flex;gap:8px;margin-top:14px}
+.btn{
+  flex:1;padding:11px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.24);
+  background:transparent;color:#fff;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;
+}
+.btn:hover{background:rgba(255,255,255,.09)}
+.btn.primary{background:var(--amber);border-color:var(--amber);color:#25180A}
+.btn.primary:hover{background:#DB9226}
+
+/* ---------- internal panel ---------- */
+.internal{margin-top:18px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden}
+.internal > summary{
+  list-style:none;cursor:pointer;padding:14px 20px;display:flex;justify-content:space-between;
+  align-items:center;gap:12px;font-weight:600;font-size:14px;
+}
+.internal > summary::-webkit-details-marker{display:none}
+.internal > summary .eyebrow{margin-right:auto}
+.internal[open] > summary{border-bottom:1px solid var(--line);background:#F7F9F9}
+.internal-body{padding:18px 20px 22px}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{text-align:left;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);padding:0 8px 8px 0;border-bottom:1px solid var(--line)}
+.tbl td{padding:7px 8px 7px 0;border-bottom:1px solid var(--line2)}
+.tbl input{width:100%;max-width:110px;font-family:var(--mono);font-size:13px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)}
+.tbl input:focus{outline:none;border-color:var(--teal)}
+.tbl .pct{font-family:var(--mono);color:var(--amber);font-weight:600}
+.mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:18px}
+.mini label{display:block;font-size:12px;color:var(--ink2);margin-bottom:4px}
+.mini input{width:100%;font-family:var(--mono);font-size:13px;padding:7px 9px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)}
+.mini input:focus{outline:none;border-color:var(--teal)}
+.flag{border-radius:8px;padding:11px 13px;font-size:13px;margin-top:14px;line-height:1.5}
+.flag.warn{background:var(--rust-s);border:1px solid #EBC6B8;color:#7A2E17}
+.flag.ok{background:var(--teal-s);border:1px solid #CFE3DF;color:var(--teal-d)}
+.flag b{font-weight:700}
+.chartwrap{margin-top:18px;border:1px solid var(--line);border-radius:8px;padding:14px;background:#FAFCFB}
+.chartwrap h3{font-size:13px;margin-bottom:2px}
+.chartwrap p{margin:0 0 8px;font-size:12px;color:var(--ink3)}
+svg{display:block;width:100%;height:auto}
+.foot{max-width:1200px;margin:0 auto;padding:0 24px 40px;font-size:12px;color:var(--ink3);line-height:1.6}
+
+@media print{
+  body{background:#fff}
+  .topbar{background:#fff;color:#000;border-bottom:2px solid #000}
+  .brand h1,.mark{color:#000}
+  .mark{background:#eee}
+  .topmeta,.brand p{color:#555}
+  .layout{display:block;padding:16px 0}
+  .rail{margin-top:18px}
+  .invoice{background:#fff;color:#000;border:1px solid #000}
+  .invoice h2,.li .v,.total .big,.stat .v{color:#000}
+  .li .k,.total .lbl,.total .per{color:#444}
+  .stat{background:#f4f4f4}
+  .acts,.chips,.internal,input[type=range],.scale{display:none}
+  .step-bar{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="inner brandrow">
+    <div class="brand">
+      <div class="mark">88</div>
+      <div>
+        <h1>IELTSSMART — Bảng giá linh hoạt</h1>
+        <p>Nền tảng luyện thi &amp; chấm A.I cho trung tâm Anh ngữ · CTCP Công nghệ NOVAFORGE</p>
+      </div>
+    </div>
+    <div class="topmeta">Báo giá tham khảo · <b id="today"></b><br>Quy mô càng lớn, đơn giá mỗi học viên càng giảm</div>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- ============ CỘT TRÁI ============ -->
+  <main>
+
+    <!-- SIGNATURE: thang bậc giá -->
+    <section class="card ladder-card">
+      <div class="eyebrow">Thang bậc đơn giá · 5 bậc</div>
+      <h2 style="margin-top:6px">Đơn giá mỗi học viên giảm dần theo quy mô</h2>
+      <p class="sub" style="margin-bottom:0">Bậc 1 là giá gốc. Phần lớn mức giảm nằm ở hai bậc đầu — từ Bậc 3 trở đi mỗi bậc chỉ còn giảm thêm vài phần trăm.</p>
+      <div class="ladder" id="ladder"></div>
+      <div class="ladder-note">
+        <span class="step-no" id="ladderTier">BẬC 3</span>
+        <span id="ladderText"></span>
+      </div>
+    </section>
+
+    <!-- Quy mô -->
+    <section class="card">
+      <h2>Quy mô trung tâm</h2>
+      <p class="sub">Học viên chính thức là học viên được ghi danh vào khóa học và quản lý tiến độ theo lớp.</p>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="students">Số học viên chính thức / tháng</label>
+          <span class="mono" id="unitPrice" style="font-size:13px;color:var(--teal)"></span>
+        </div>
+        <p class="field-hint">Tối thiểu 10 học viên. Mỗi học viên chính thức tương ứng một tài khoản đăng nhập. Có thể chuyển sang trạng thái lưu trữ và khôi phục khi cần.</p>
+        <div class="rowc">
+          <input type="range" id="students" min="0" max="1000" value="0">
+          <input type="text" inputmode="numeric" class="numbox" id="studentsN" value="152">
+        </div>
+        <div class="scale"><span>10</span><span>100.000</span></div>
+        <div class="chips" id="sizeChips"></div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><label>Cách tính tiền</label></div>
+        <p class="field-hint" id="modeHint"></p>
+      </div>
+    </section>
+
+    <!-- A.I -->
+    <section class="card">
+      <h2>Lượt chấm A.I — mua theo tài khoản</h2>
+      <p class="sub">Mỗi học viên chính thức là một tài khoản. Kéo thanh trượt để chọn định mức cho <b>một tài khoản</b> — thành tiền của cả trung tâm hiện ở khung Chi tiết giá. Lượt mua thêm cộng dồn, dùng linh hoạt suốt thời gian đăng ký.</p>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="extraW">A.I chấm Writing</label>
+          <span class="mono" style="font-size:12.5px;color:var(--ink3)" id="wRate"></span>
+        </div>
+        <div class="incl"><span class="tick">✓</span><span>Tặng sẵn <b>4 lượt / tài khoản</b> mỗi tháng · 1 lượt = 1 bài Writing 2 Task</span></div>
+        <p class="field-hint">Kéo để tăng tổng số lượt mỗi tài khoản — chỉ phần vượt định mức tặng mới tính tiền:</p>
+        <div class="rowc">
+          <input type="range" id="extraW" min="4" max="28" step="1" value="4">
+          <input type="text" inputmode="numeric" class="numbox" id="extraWN" value="4">
+          <span class="unit">lượt / tài khoản</span>
+        </div>
+        <div class="scale"><span id="wMin"></span><span id="wCalc"></span><span id="wMax"></span></div>
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="extraS">A.I chấm Speaking</label>
+          <span class="mono" style="font-size:12.5px;color:var(--ink3)" id="sRate"></span>
+        </div>
+        <div class="incl"><span class="tick">✓</span><span>Tặng sẵn <b>4 câu / tài khoản</b> mỗi tháng · 1 lượt = 1 câu hỏi Speaking có chấm điểm &amp; nhận xét</span></div>
+        <p class="field-hint">Kéo để tăng tổng số câu mỗi tài khoản — chỉ phần vượt định mức tặng mới tính tiền:</p>
+        <div class="rowc">
+          <input type="range" id="extraS" min="4" max="64" step="1" value="4">
+          <input type="text" inputmode="numeric" class="numbox" id="extraSN" value="4">
+          <span class="unit">câu / tài khoản</span>
+        </div>
+        <div class="scale"><span id="sMin"></span><span id="sCalc"></span><span id="sMax"></span></div>
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="mock">Lượt thi thử IELTS full 4 kỹ năng</label>
+          <span class="mono" style="font-size:12.5px;color:var(--ink3)" id="mRate"></span>
+        </div>
+        <div class="incl" style="background:var(--amber-s);border-color:var(--amber-l);color:#6E4A0F">
+          <span class="tick">◆</span><span>1 lượt = 1 đề hoàn chỉnh: <b>10 câu Speaking + 2 Task Writing + Reading + Listening</b>, có báo cáo band tổng và band từng kỹ năng.</span>
+        </div>
+        <p class="field-hint">Số bài thi thử cho mỗi tài khoản (mặc định 0 — chỉ tính tiền khi bật):</p>
+        <div class="rowc">
+          <input type="range" id="mock" min="0" max="12" step="1" value="0">
+          <input type="text" inputmode="numeric" class="numbox" id="mockN" value="0">
+          <span class="unit">bài / tài khoản</span>
+        </div>
+        <div class="scale"><span>+0</span><span id="mCalc"></span><span>+12</span></div>
+      </div>
+    </section>
+
+    <!-- Tùy chọn thêm -->
+    <section class="card">
+      <h2>Tùy chọn thêm</h2>
+      <p class="sub">Các mục dưới đây tính riêng cho trung tâm, không nhân theo số tài khoản. Mặc định bằng 0 — chỉ tính tiền khi bật.</p>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="entry">Lượt test đầu vào</label>
+          <span class="mono" style="font-size:12.5px;color:var(--ink3)" id="eRate"></span>
+        </div>
+        <p class="field-hint">Dùng để phân loại trình độ người mới trước khi xếp lớp. Lượt mua thuộc về trung tâm, dùng cho bất kỳ ai — không cần tạo tài khoản học viên.</p>
+        <div class="rowc">
+          <input type="range" id="entry" min="0" max="2000" step="10" value="0">
+          <input type="text" inputmode="numeric" class="numbox" id="entryN" value="0">
+          <span class="unit">lượt / trung tâm</span>
+        </div>
+        <div class="scale"><span>+0</span><span id="eCalc"></span><span>+2.000</span></div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><label for="storage">Dung lượng bổ sung</label></div>
+        <p class="field-hint" id="storeRate"></p>
+        <div class="rowc">
+          <input type="range" id="storage" min="0" max="1000" step="10" value="0">
+          <input type="text" inputmode="numeric" class="numbox" id="storageN" value="0">
+          <span class="unit">GB</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tính năng đi kèm -->
+    <section class="card">
+      <h2>Tính năng đi kèm</h2>
+      <p class="sub">Mọi bậc giá đều nhận đủ những mục dưới đây, không có tính năng nào bị khóa theo quy mô.</p>
+
+      <div class="feat-lead">
+        <span class="tick">◆</span>
+        <div>
+          <b>Sở hữu nền tảng dạy và học ứng dụng trí tuệ nhân tạo</b>
+          <span>Trung tâm vận hành hệ thống dưới thương hiệu và tên miền của mình, toàn quyền với dữ liệu học viên, chuyển sang máy chủ riêng bất cứ lúc nào.</span>
+        </div>
+      </div>
+
+      <ul class="feats" id="feats"></ul>
+    </section>
+
+    <!-- Cam kết -->
+    <section class="card">
+      <h2>Cam kết thời hạn</h2>
+      <p class="sub">Trả trước cả kỳ để nhận chiết khấu. Chiết khấu áp cho toàn bộ hóa đơn, gồm cả lượt A.I mua thêm.</p>
+      <div class="seg" id="termSeg"></div>
+    </section>
+
+    <!-- Bảng nội bộ -->
+    <details class="internal" id="internal">
+      <summary>
+        <span class="eyebrow">Chế độ nội bộ · NOVAFORGE</span>
+        <span style="color:var(--ink3);font-weight:500;font-size:13px">Sửa cấu hình giá &amp; kiểm tra biên ▾</span>
+      </summary>
+      <div class="internal-body">
+        <table class="tbl">
+          <thead><tr>
+            <th style="width:52px">Bậc</th><th>Khoảng học viên</th><th style="width:120px">Đơn giá / HV</th>
+            <th style="width:70px">Giảm</th><th style="width:130px">Giá gói tối thiểu</th>
+            <th style="width:95px">Writing tặng</th><th style="width:95px">Speaking tặng</th>
+          </tr></thead>
+          <tbody id="cfgRows"></tbody>
+        </table>
+
+        <div style="margin-top:16px">
+          <div style="font-size:12px;color:var(--ink2);margin-bottom:6px">Cách tính tiền (chỉ dùng để đối chiếu nội bộ — bản gửi khách luôn là đồng giá theo bậc)</div>
+          <div class="switch" id="modeSwitch">
+            <button data-mode="flat">Đồng giá theo bậc</button>
+            <button data-mode="grad">Lũy tiến từng bậc</button>
+          </div>
+        </div>
+
+        <div class="mini" id="cfgMini"></div>
+
+        <div id="flags"></div>
+
+        <div class="chartwrap">
+          <h3>Đơn giá thực tế / học viên theo quy mô</h3>
+          <p>Đường này phải luôn đi xuống. Nếu có đoạn nhô lên, trung tâm sẽ trả nhiều tiền hơn khi bớt học viên đi.</p>
+          <svg id="curve" viewBox="0 0 640 190" preserveAspectRatio="none" aria-label="Biểu đồ đơn giá theo quy mô"></svg>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <!-- ============ CỘT PHẢI ============ -->
+  <aside class="rail">
+    <div class="invoice">
+      <h2>Chi tiết giá</h2>
+      <div id="lines"></div>
+
+      <div class="anchor-line">
+        <span class="k">Nếu tính theo đơn giá Bậc 1 <br><span style="font-size:11.5px;color:#7A9296" id="anchorNote"></span></span>
+        <span class="v" id="anchorVal"></span>
+      </div>
+      <div class="save"><span id="saveLbl">Tiết kiệm nhờ quy mô</span><span class="v" id="saveVal"></span></div>
+
+      <div class="total">
+        <div class="lbl">THÀNH TIỀN / THÁNG</div>
+        <div class="big" id="perMonth"></div>
+        <div class="per" id="perStudent"></div>
+      </div>
+
+      <div class="grid2">
+        <div class="stat"><div class="lbl">Tổng cả kỳ <span id="termLbl"></span></div><div class="v" id="termTotal"></div></div>
+        <div class="stat"><div class="lbl">Chiết khấu kỳ hạn</div><div class="v" id="termOff"></div></div>
+      </div>
+
+      <div class="acts">
+        <button class="btn primary" id="btnPrint">Tải báo giá PDF</button>
+        <button class="btn" id="btnCopy">Sao chép</button>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<div class="foot">
+  Giá chưa gồm VAT. Báo giá tham khảo, hiệu lực 30 ngày kể từ ngày xuất. Lượt chấm A.I mua thêm được cộng dồn, không giới hạn theo tháng và dùng được trong suốt thời gian đăng ký.
+</div>
+
+<script>
+/* ================= CẤU HÌNH GIÁ ================= */
+const CFG = {
+  tiers:[
+    {no:1, min:10,   max:49,     price:49000, minFee:490000,    wFree:4, sFree:4},
+    {no:2, min:50,   max:119,    price:34000, minFee:2450000,   wFree:4, sFree:4},
+    {no:3, min:120,  max:299,    price:26000, minFee:4100000,   wFree:4, sFree:4},
+    {no:4, min:300,  max:999,    price:22000, minFee:7800000,   wFree:4, sFree:4},
+    {no:5, min:1000, max:100000, price:19000, minFee:22000000,  wFree:4, sFree:4}
+  ],
+  wExtra:2100, sExtra:3000, mock:27000, entry:13000,
+  mockS:10, mockW:1,            // 1 bài thi thử = 10 câu Speaking + 1 lượt Writing (2 Task) + R + L
+  cogsW:600,  cogsS:700, cogsRL:200, cogsEntry:3000,
+  storagePerGB:5000, freeMBperStudent:500,
+  terms:[{m:1,d:0},{m:3,d:.08},{m:6,d:.15},{m:12,d:.25}],
+  mode:'flat'
+};
+/* extraW / extraS / mockPer là ĐỊNH MỨC TRÊN MỖI TÀI KHOẢN — entry tính theo trung tâm */
+const S = {n:152, extraW:0, extraS:0, mockPer:0, entry:0, storage:0, term:1};
+
+const SMIN=10, SMAX=100000;
+const vnd = v => Math.round(v).toLocaleString('vi-VN')+'đ';
+const num = v => Math.round(v).toLocaleString('vi-VN');
+const $ = id => document.getElementById(id);
+
+/* ---- slider log ---- */
+const pos2n = p => { const t=p/1000, raw=SMIN*Math.pow(SMAX/SMIN,t);
+  const s = raw<100?1:raw<1000?5:raw<10000?50:500;
+  return Math.max(SMIN, Math.min(SMAX, Math.round(raw/s)*s)); };
+const n2pos = n => Math.round(1000*Math.log(n/SMIN)/Math.log(SMAX/SMIN));
+
+/* ---- tính tiền ---- */
+const tierOf = n => CFG.tiers.find(t=>n>=t.min&&n<=t.max) || CFG.tiers[CFG.tiers.length-1];
+const floorOf = t => t.minFee||0;
+
+function studentFee(n){
+  if(CFG.mode==='grad'){
+    let s=0;
+    CFG.tiers.forEach((t,i)=>{ const lo=i===0?1:t.min, c=Math.min(n,t.max)-lo+1; if(c>0) s+=c*t.price; });
+    return s;
+  }
+  const t=tierOf(n);
+  return Math.max(n*t.price, floorOf(t));
+}
+
+function calc(){
+  const n=S.n, t=tierOf(n);
+  const fee=studentFee(n);
+  const wFreeQty=t.wFree*n, sFreeQty=t.sFree*n;
+  const wQty=S.extraW*n, sQty=S.extraS*n, mQty=S.mockPer*n;   // định mức/tài khoản × số tài khoản
+  const wCost=wQty*CFG.wExtra, sCost=sQty*CFG.sExtra, mCost=mQty*CFG.mock;
+  const eQty=S.entry, eCost=eQty*CFG.entry;                    // test đầu vào tính theo trung tâm
+  const storeCost=S.storage*CFG.storagePerGB;
+  const addons=wCost+sCost+mCost+eCost+storeCost;
+  const gross=fee+addons;
+  const term=CFG.terms.find(x=>x.m===S.term)||CFG.terms[0];
+  const month=gross*(1-term.d);
+  const anchorFee=n*CFG.tiers[0].price;
+  const anchor=anchorFee+addons;
+  const cogs=(wFreeQty+wQty+mQty*CFG.mockW)*CFG.cogsW
+            +(sFreeQty+sQty+mQty*CFG.mockS)*CFG.cogsS
+            + mQty*CFG.cogsRL + eQty*CFG.cogsEntry;
+  return {n,t,fee,wFreeQty,sFreeQty,wQty,sQty,mQty,eQty,wCost,sCost,mCost,eCost,storeCost,addons,
+          gross,term,month,anchor,anchorFee,cogs};
+}
+
+/* ================= RENDER ================= */
+function ladder(){
+  const cur=tierOf(S.n), base=CFG.tiers[0].price;
+  $('ladder').innerHTML=CFG.tiers.map(t=>{
+    const off=Math.round((1-t.price/base)*100);
+    const h=Math.max(30, Math.round(t.price/base*100));
+    const rng=t.no===1?`10 – ${num(t.max)}`:t.no===CFG.tiers.length?`${num(t.min)}+`:`${num(t.min)} – ${num(t.max)}`;
+    return `<button class="step ${t.no===cur.no?'active':''}" data-tier="${t.no}">
+      <span class="step-badge ${off===0?'is-base':''}">${off===0?'GIÁ GỐC':'−'+off+'%'}</span>
+      <span class="step-track"><span class="step-bar" style="height:${h}%">
+        <span class="step-price">${num(t.price)}đ</span>
+        <span class="step-unit">/ học viên / tháng</span>
+      </span></span>
+      <span class="step-range"><span class="step-no">BẬC ${t.no}</span><br>${rng} HV<br><span class="step-min">tối thiểu ${num(t.minFee)}đ</span></span>
+    </button>`;
+  }).join('');
+  document.querySelectorAll('.step').forEach(b=>b.onclick=()=>{
+    const t=CFG.tiers.find(x=>x.no==b.dataset.tier);
+    setStudents(t.no===1?30:Math.min(t.max, Math.round(t.min*1.4)));
+  });
+  const off=Math.round((1-cur.price/base)*100);
+  $('ladderTier').textContent='BẬC '+cur.no;
+  $('ladderText').innerHTML = off===0
+    ? `Quy mô hiện tại <b>${num(S.n)} học viên</b> — đang ở mức giá gốc. Đạt <b>50 học viên</b> là bước sang Bậc 2, rẻ hơn 27%.`
+    : `Quy mô hiện tại <b>${num(S.n)} học viên</b> — đơn giá <b>${num(cur.price)}đ/HV</b>, rẻ hơn <b>${off}%</b> so với Bậc 1.`;
+}
+
+function invoice(){
+  const c=calc(), rows=[];
+  rows.push({k:`Tài khoản học viên chính thức (${num(c.n)})`, s:`Đã gồm ${c.t.wFree} lượt Writing + ${c.t.sFree} câu Speaking / tài khoản`, v:vnd(c.fee)});
+  rows.push({k:'Lưu trữ đi kèm', s:`500 MB / tài khoản`, v:'Miễn phí', free:1});
+  if(S.mockPer) rows.push({k:'Thi thử IELTS full 4 kỹ năng', s:`${S.mockPer} bài / tài khoản × ${num(c.n)} tài khoản`, v:vnd(c.mCost)});
+  if(S.extraW) rows.push({k:'A.I Writing vượt định mức', s:`Tổng ${c.t.wFree+S.extraW} lượt/tài khoản · tính tiền ${S.extraW} lượt × ${num(c.n)} tài khoản`, v:vnd(c.wCost)});
+  if(S.extraS) rows.push({k:'A.I Speaking vượt định mức', s:`Tổng ${c.t.sFree+S.extraS} câu/tài khoản · tính tiền ${S.extraS} câu × ${num(c.n)} tài khoản`, v:vnd(c.sCost)});
+  if(S.entry) rows.push({k:'Lượt test đầu vào', s:`${num(S.entry)} lượt × ${num(CFG.entry)}đ · dùng chung cho trung tâm`, v:vnd(c.eCost)});
+  if(S.storage) rows.push({k:'Dung lượng bổ sung', s:`+${num(S.storage)} GB × ${num(CFG.storagePerGB)}đ`, v:vnd(c.storeCost)});
+  $('lines').innerHTML=rows.map(r=>`<div class="li ${r.free?'free':''}"><span class="k">${r.k}${r.s?`<small>${r.s}</small>`:''}</span><span class="v">${r.v}</span></div>`).join('');
+
+  const saved=c.anchor-c.month, savedPct=c.anchor?Math.round(saved/c.anchor*100):0;
+  $('anchorNote').textContent=`${num(c.n)} HV × ${num(CFG.tiers[0].price)}đ + tùy chọn`;
+  $('anchorVal').textContent=vnd(c.anchor);
+  $('saveLbl').textContent = c.term.d>0 ? 'Tiết kiệm nhờ quy mô + kỳ hạn' : 'Tiết kiệm nhờ quy mô';
+  $('saveVal').textContent = savedPct>0 ? `−${savedPct}% · ${vnd(saved)}` : '—';
+  $('perMonth').textContent=vnd(c.month);
+  $('perStudent').textContent=`≈ ${vnd(c.month/c.n)} / tài khoản / tháng`;
+  $('termLbl').textContent=`(${c.term.m} tháng)`;
+  $('termTotal').textContent=vnd(c.month*c.term.m);
+  $('termOff').textContent=c.term.d?`−${Math.round(c.term.d*100)}%`:'—';
+  $('unitPrice').textContent=`Bậc ${c.t.no} · ${num(c.t.price)}đ/HV`;
+}
+
+const setBox=(id,v)=>{const el=$(id); if(document.activeElement!==el) el.value=v;};
+
+function controls(){
+  const c=calc();
+  setBox('studentsN',num(S.n));
+  $('students').value=n2pos(S.n);
+  $('wRate').textContent=`${num(CFG.wExtra)}đ / lượt`;
+  $('sRate').textContent=`${num(CFG.sExtra)}đ / câu`;
+  $('mRate').textContent=`${num(CFG.mock)}đ / bài`;
+  $('eRate').textContent=`${num(CFG.entry)}đ / lượt`;
+  const wBase=c.t.wFree, sBase=c.t.sFree;
+  $('extraW').min=wBase; $('extraW').max=wBase+24; $('extraW').value=wBase+S.extraW;
+  $('extraS').min=sBase; $('extraS').max=sBase+60; $('extraS').value=sBase+S.extraS;
+  setBox('extraWN',wBase+S.extraW); setBox('extraSN',sBase+S.extraS);
+  $('wMin').textContent=`${wBase} đã tặng`; $('wMax').textContent=`${wBase+24}`;
+  $('sMin').textContent=`${sBase} đã tặng`; $('sMax').textContent=`${sBase+60}`;
+  $('mock').value=S.mockPer; setBox('mockN',S.mockPer);
+  $('entry').value=S.entry; setBox('entryN',num(S.entry));
+  $('eCalc').textContent=S.entry?`${num(S.entry)} lượt = ${vnd(c.eCost)}`:'chưa mua';
+  const per=(q,rate,zero)=>q?`mua thêm ${q} · ${vnd(q*rate)} / tài khoản`:zero;
+  $('wCalc').textContent=per(S.extraW,CFG.wExtra,'chỉ dùng lượt tặng');
+  $('sCalc').textContent=per(S.extraS,CFG.sExtra,'chỉ dùng lượt tặng');
+  $('mCalc').textContent=S.mockPer?`${vnd(S.mockPer*CFG.mock)} / tài khoản`:'chưa mua';
+  setBox('storageN',num(S.storage)); $('storage').value=S.storage;
+  $('storeRate').textContent=`${num(CFG.storagePerGB)}đ / GB / tháng · đã tặng 500 MB / tài khoản`;
+  $('modeHint').textContent = CFG.mode==='flat'
+    ? 'Toàn bộ học viên tính theo đơn giá của bậc đang đứng. Mỗi bậc có một giá gói tối thiểu — nếu số học viên nhân đơn giá thấp hơn giá gói thì hóa đơn lấy giá gói.'
+    : 'Lũy tiến: mỗi khoảng học viên tính theo đơn giá của khoảng đó, giống cách tính thuế bậc thang.';
+  document.querySelectorAll('#modeSwitch button').forEach(b=>b.classList.toggle('on',b.dataset.mode===CFG.mode));
+  document.querySelectorAll('#termSeg button').forEach(b=>b.classList.toggle('on',+b.dataset.m===S.term));
+  document.querySelectorAll('#sizeChips .chip').forEach(b=>b.classList.toggle('on',+b.dataset.s===S.n));
+  ['students','extraW','extraS','mock','entry','storage'].forEach(id=>{
+    const el=$(id); const p=(el.value-el.min)/(el.max-el.min)*100;
+    el.style.setProperty('--fill',p+'%');
+  });
+}
+
+/* ---- panel nội bộ ---- */
+function internalPanel(){
+  const base=CFG.tiers[0].price;
+  $('cfgRows').innerHTML=CFG.tiers.map((t,i)=>`<tr>
+    <td class="mono">${t.no}</td>
+    <td class="mono" style="color:var(--ink2)">${t.no===1?'10 – ':''}${t.no===1?num(t.max):num(t.min)+' – '+num(t.max)}</td>
+    <td><input data-f="price" data-i="${i}" value="${t.price}"></td>
+    <td class="pct">${i===0?'—':'−'+Math.round((1-t.price/base)*100)+'%'}</td>
+    <td><input data-f="minFee" data-i="${i}" value="${t.minFee}"></td>
+    <td><input data-f="wFree" data-i="${i}" value="${t.wFree}"></td>
+    <td><input data-f="sFree" data-i="${i}" value="${t.sFree}"></td>
+  </tr>`).join('');
+
+  const minis=[
+    ['wExtra','Writing mua thêm (đ/lượt)'],['sExtra','Speaking mua thêm (đ/câu)'],
+    ['mock','Thi thử full 4 kỹ năng (đ/bài)'],['entry','Test đầu vào (đ/lượt)'],
+    ['mockS','Số câu Speaking trong 1 bài thi thử'],
+    ['cogsW','Chi phí thực 1 lượt Writing'],['cogsS','Chi phí thực 1 câu Speaking'],
+    ['cogsRL','Chi phí thực Reading + Listening'],['cogsEntry','Chi phí thực 1 test đầu vào']
+  ];
+  $('cfgMini').innerHTML=minis.map(([k,l])=>`<div><label>${l}</label><input data-g="${k}" value="${CFG[k]}"></div>`).join('');
+
+  document.querySelectorAll('#cfgRows input').forEach(el=>el.oninput=()=>{
+    const v=parseInt(el.value.replace(/\D/g,''))||0; CFG.tiers[+el.dataset.i][el.dataset.f]=v; render(false);
+  });
+  document.querySelectorAll('#cfgMini input').forEach(el=>el.oninput=()=>{
+    CFG[el.dataset.g]=parseInt(el.value.replace(/\D/g,''))||0; render(false);
+  });
+  flags(); curve();
+}
+
+function flags(){
+  const c=calc(), out=[], b0=CFG.tiers[0].price;
+  document.querySelectorAll('#cfgRows tr').forEach((tr,i)=>{
+    const cell=tr.querySelector('.pct');
+    if(cell) cell.textContent = i===0 ? '—' : '−'+Math.round((1-CFG.tiers[i].price/b0)*100)+'%';
+  });
+  // 1. giá gói tối thiểu
+  if(CFG.mode==='flat'){
+    const fl=floorOf(c.t), on=c.n*c.t.price<fl, thr=Math.ceil(fl/c.t.price);
+    const bad=CFG.tiers.filter(t=>t.no>1&&t.minFee<CFG.tiers[t.no-2].max*CFG.tiers[t.no-2].price);
+    const spans=CFG.tiers.filter(t=>t.no>1&&t.minFee>t.min*t.price)
+      .map(t=>`Bậc ${t.no}: ${num(t.min)}–${num(Math.ceil(t.minFee/t.price)-1)} HV`);
+    out.push(on
+      ? `<div class="flag warn"><b>Quy mô này đang trả giá gói tối thiểu.</b> ${num(c.n)} HV × ${num(c.t.price)}đ = ${vnd(c.n*c.t.price)}, thấp hơn giá gói tối thiểu ${vnd(fl)} của Bậc ${c.t.no}. Hóa đơn lấy giá gói, tức ${vnd(c.fee/c.n)}/HV. Trung tâm hưởng đúng ${num(c.t.price)}đ/HV từ ${num(thr)} HV trở lên.</div>`
+      : `<div class="flag ok">Quy mô này hưởng đúng đơn giá niêm yết ${num(c.t.price)}đ/HV, vượt giá gói tối thiểu ${vnd(fl)}.</div>`);
+    if(bad.length) out.push(`<div class="flag warn"><b>Giá gói tối thiểu đang đặt quá thấp ở ${bad.map(t=>'Bậc '+t.no).join(', ')}.</b> Khách ở cuối bậc dưới sẽ trả nhiều hơn khách đầu bậc trên — tăng học viên mà hóa đơn giảm. Nâng giá gói tối thiểu lên ít nhất ${bad.map(t=>vnd(CFG.tiers[t.no-2].max*CFG.tiers[t.no-2].price)).join(' / ')}.</div>`);
+    if(spans.length) out.push(`<div class="flag ok">Vùng áp giá gói tối thiểu — ${spans.join('; ')}. Sale cần biết để không hứa sai đơn giá cho nhóm này.</div>`);
+  } else {
+    out.push(`<div class="flag ok">Lũy tiến: đơn giá bình quân giảm mượt, không có vùng mức sàn và không có bước nhảy ngược. Đổi lại, đơn giá thực tế ${vnd(c.fee/c.n)}/HV cao hơn giá in ${num(c.t.price)}đ của Bậc ${c.t.no}, nên bảng giá phải ghi rõ &ldquo;áp cho phần học viên trong khoảng&rdquo;.</div>`);
+  }
+
+  // 2. biên credit tặng
+  const t=c.t;
+  const giftRetail=t.wFree*CFG.wExtra+t.sFree*CFG.sExtra;
+  const giftCost=t.wFree*CFG.cogsW+t.sFree*CFG.cogsS;
+  const revPerHV=c.fee/c.n;
+  const rev0=c.fee+c.wCost+c.sCost+c.mCost+c.eCost;
+  const gm=(rev0-c.cogs)/rev0;
+  out.push(giftRetail>revPerHV
+    ? `<div class="flag warn"><b>Bậc ${t.no}: quà tặng đắt hơn giá bán.</b> ${t.wFree} Writing + ${t.sFree} Speaking tặng kèm có giá niêm yết ${vnd(giftRetail)}/HV, trong khi trung tâm chỉ trả ${vnd(revPerHV)}/HV. Trung tâm sẽ không bao giờ cần mua thêm lượt, và mức tặng này tự phá giá lượt lẻ. Cân nhắc giảm định mức tặng ở bậc cao (ví dụ 4/4 cho Bậc 1–2, 2/2 cho Bậc 4–5) hoặc nâng giá sàn bậc cuối.</div>`
+    : `<div class="flag ok">Bậc ${t.no}: quà tặng ${vnd(giftRetail)}/HV theo giá niêm yết, thấp hơn ${vnd(revPerHV)}/HV thu được. Còn dư địa để trung tâm mua thêm lượt.</div>`);
+
+  // 3. biên gộp
+  // 3. chênh giá giữa gói thi thử và mua lẻ
+  const aLa=CFG.mockS*CFG.sExtra+CFG.mockW*CFG.wExtra;
+  out.push(CFG.mock<CFG.mockS*CFG.sExtra
+    ? `<div class="flag warn"><b>Gói thi thử đang rẻ hơn cả phần Speaking mua lẻ.</b> ${CFG.mockS} câu Speaking lẻ = ${vnd(CFG.mockS*CFG.sExtra)}, trong khi cả bài thi thử 4 kỹ năng chỉ ${vnd(CFG.mock)}. Khách chỉ cần lượt Speaking sẽ mua thi thử thay vì mua lẻ, và dòng doanh thu Speaking coi như chết. Cần một trong hai: nâng giá thi thử lên tối thiểu ${vnd(CFG.mockS*CFG.sExtra)}, hoặc hạ giá Speaking xuống dưới ${vnd(CFG.mock/CFG.mockS)}/câu.</div>`
+    : `<div class="flag ok">Gói thi thử ${vnd(CFG.mock)} so với mua lẻ ${vnd(aLa)} — chiết khấu gói ${Math.round((1-CFG.mock/aLa)*100)}%, vẫn cao hơn ${CFG.mockS} câu Speaking lẻ (${vnd(CFG.mockS*CFG.sExtra)}) nên không bị mua vòng.</div>`);
+
+  // 4. biên gộp
+  const wTot=c.wFreeQty+c.wQty+c.mQty*CFG.mockW, sTot=c.sFreeQty+c.sQty+c.mQty*CFG.mockS;
+  out.push(`<div class="flag ${gm<0.5?'warn':'ok'}"><b>Biên gộp ước tính ${(gm*100).toFixed(0)}%.</b> Chi phí A.I thực tế ${vnd(c.cogs)}/tháng — ${num(wTot)} lượt Writing × ${num(CFG.cogsW)}đ + ${num(sTot)} câu Speaking × ${num(CFG.cogsS)}đ${c.mQty?` + ${num(c.mQty)} bài R&amp;L × ${num(CFG.cogsRL)}đ`:''}${c.eQty?` + ${num(c.eQty)} test đầu vào × ${num(CFG.cogsEntry)}đ`:''} — trên doanh thu ${vnd(rev0)}. Sửa các ô chi phí thực ở trên theo giá API thật để ra con số đúng.</div>`);
+
+  $('flags').innerHTML=out.join('');
+}
+
+function curve(){
+  const W=640,H=190,PL=52,PR=12,PT=14,PB=26, base=CFG.tiers[0].price;
+  const xs=[]; for(let i=0;i<=90;i++) xs.push(SMIN*Math.pow(SMAX/SMIN,i/90));
+  const eff=n=>studentFee(Math.round(n))/Math.round(n);
+  const yMax=base*1.05, yMin=0;
+  const X=n=>PL+(Math.log(n/SMIN)/Math.log(SMAX/SMIN))*(W-PL-PR);
+  const Y=v=>PT+(1-(v-yMin)/(yMax-yMin))*(H-PT-PB);
+  const pts=xs.map(n=>`${X(n).toFixed(1)},${Y(eff(n)).toFixed(1)}`).join(' ');
+  const ticks=[10,50,120,300,1000,10000,100000];
+  const grid=[0,15000,30000,45000].map(v=>`<line x1="${PL}" y1="${Y(v)}" x2="${W-PR}" y2="${Y(v)}" stroke="#E3EAE9"/><text x="${PL-7}" y="${Y(v)+3.5}" text-anchor="end" font-size="9.5" font-family="IBM Plex Mono, monospace" fill="#7A8D92">${v/1000}k</text>`).join('');
+  const tk=ticks.map(n=>`<line x1="${X(n)}" y1="${PT}" x2="${X(n)}" y2="${H-PB}" stroke="#EDF1F0"/><text x="${X(n)}" y="${H-9}" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono, monospace" fill="#7A8D92">${n>=1000?n/1000+'k':n}</text>`).join('');
+  const cx=X(S.n), cy=Y(studentFee(S.n)/S.n);
+  $('curve').innerHTML=`${grid}${tk}
+    <polyline points="${pts}" fill="none" stroke="#0E6E64" stroke-width="2.2" stroke-linejoin="round"/>
+    <line x1="${cx}" y1="${PT}" x2="${cx}" y2="${H-PB}" stroke="#C9821B" stroke-dasharray="3 3"/>
+    <circle cx="${cx}" cy="${cy}" r="4.5" fill="#C9821B" stroke="#fff" stroke-width="2"/>`;
+}
+
+/* ================= SỰ KIỆN ================= */
+function setStudents(n){ S.n=Math.max(SMIN,Math.min(SMAX,Math.round(n)||SMIN)); render(); }
+
+function render(rebuildInternal=true){
+  ladder(); invoice(); controls();
+  if($('internal').open||rebuildInternal){ flags(); curve(); }
+}
+
+function bindNum(sliderId,inputId,onVal,fromPos){
+  $(sliderId).addEventListener('input',e=>onVal(fromPos?fromPos(+e.target.value):+e.target.value));
+  $(inputId).addEventListener('input',e=>{
+    const v=parseInt(e.target.value.replace(/\D/g,''));
+    if(!isNaN(v)) onVal(v);
+  });
+  $(inputId).addEventListener('blur',()=>render());
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  $('today').textContent=new Date().toLocaleDateString('vi-VN');
+
+  $('sizeChips').innerHTML=[30,80,152,500,2000,15000].map(s=>`<button class="chip" data-s="${s}">${num(s)} HV</button>`).join('');
+  document.querySelectorAll('#sizeChips .chip').forEach(b=>b.onclick=()=>setStudents(+b.dataset.s));
+
+  $('feats').innerHTML=[
+    'Phòng thi ảo đủ 4 kỹ năng Listening, Reading, Writing, Speaking',
+    'Chấm Writing và Speaking bằng A.I theo tiêu chí band descriptor IELTS, có nhận xét từng tiêu chí',
+    'Chống gian lận: chặn sao chép, phát hiện chuyển tab, khóa sửa lỗi chính tả, nhận diện bài học thuộc',
+    'Quản lý chương trình học, giao bài tập với 10+ dạng bài',
+    'Kho đề thi uy tín có sẵn và được cập nhật liên tục',
+    'Nhập đề và bài tập từ file PDF bằng A.I',
+    'Bảo mật tài liệu và video bài giảng, chống phát tán và tải xuống',
+    'Website riêng chuẩn SEO, dễ lên top Google',
+    'Tặng kèm quản lý trung tâm: điểm danh, học phí, tài chính, chấm công',
+    'Phân quyền và không giới hạn số tài khoản nhân viên',
+    'Báo cáo tiến độ cho học viên và phụ huynh theo từng kỹ năng',
+    'Góp ý tính năng và nhận cập nhật định kỳ'
+  ].map(f=>`<li>${f}</li>`).join('');
+
+  $('termSeg').innerHTML=CFG.terms.map(t=>`<button data-m="${t.m}"><span class="t">${t.m} tháng</span><span class="d">${t.d?'−'+Math.round(t.d*100)+'%':'giá chuẩn'}</span></button>`).join('');
+  document.querySelectorAll('#termSeg button').forEach(b=>b.onclick=()=>{S.term=+b.dataset.m;render();});
+
+  document.querySelectorAll('#modeSwitch button').forEach(b=>b.onclick=()=>{CFG.mode=b.dataset.mode;render();});
+
+  bindNum('students','studentsN',v=>{S.n=Math.max(SMIN,Math.min(SMAX,v));render();},pos2n);
+  bindNum('extraW','extraWN',v=>{const b=tierOf(S.n).wFree;S.extraW=Math.max(0,Math.min(24,v-b));render();});
+  bindNum('extraS','extraSN',v=>{const b=tierOf(S.n).sFree;S.extraS=Math.max(0,Math.min(60,v-b));render();});
+  bindNum('mock','mockN',v=>{S.mockPer=Math.max(0,Math.min(60,v));render();});
+  bindNum('entry','entryN',v=>{S.entry=Math.max(0,Math.min(50000,v));render();});
+  bindNum('storage','storageN',v=>{S.storage=Math.max(0,v);render();});
+
+  $('btnPrint').onclick=()=>window.print();
+  $('btnCopy').onclick=()=>{
+    const c=calc();
+    const txt=`BÁO GIÁ IELTSSMART — NOVAFORGE
+Quy mô: ${num(c.n)} tài khoản học viên chính thức (Bậc ${c.t.no} · ${num(c.t.price)}đ/tài khoản)
+Phí nền tảng: ${vnd(c.fee)}
+Tặng sẵn mỗi tài khoản: ${c.t.wFree} lượt Writing + ${c.t.sFree} câu Speaking + 500MB lưu trữ
+${S.mockPer?`Thi thử IELTS: ${S.mockPer} bài/tài khoản = ${vnd(c.mCost)}\n`:''}${S.extraW?`Writing mua thêm: ${S.extraW} lượt/tài khoản = ${vnd(c.wCost)}\n`:''}${S.extraS?`Speaking mua thêm: ${S.extraS} câu/tài khoản = ${vnd(c.sCost)}\n`:''}${S.entry?`Test đầu vào: ${num(S.entry)} lượt (dùng chung trung tâm) = ${vnd(c.eCost)}\n`:''}${S.storage?`Dung lượng bổ sung: ${num(S.storage)} GB = ${vnd(c.storeCost)}\n`:''}Cam kết ${c.term.m} tháng${c.term.d?` (chiết khấu ${Math.round(c.term.d*100)}%)`:''}
+THÀNH TIỀN: ${vnd(c.month)}/tháng — ${vnd(c.month/c.n)}/tài khoản
+Tổng cả kỳ: ${vnd(c.month*c.term.m)}
+(Giá chưa gồm VAT)`;
+    navigator.clipboard.writeText(txt).then(()=>{
+      const b=$('btnCopy'); b.textContent='Đã sao chép'; setTimeout(()=>b.textContent='Sao chép',1600);
+    });
+  };
+
+  $('internal').addEventListener('toggle',()=>{ if($('internal').open){flags();curve();} });
+
+  internalPanel();
+  render();
+});
+</script>
+</body>
+</html>
