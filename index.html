@@ -280,7 +280,6 @@ svg{display:block;width:100%;height:auto}
     <section class="card ladder-card">
       <div class="eyebrow">Thang bậc đơn giá · 5 bậc</div>
       <h2 style="margin-top:6px">Đơn giá mỗi học viên giảm dần theo quy mô</h2>
-      <p class="sub" style="margin-bottom:0">Bậc 1 là giá gốc. Phần lớn mức giảm nằm ở hai bậc đầu — từ Bậc 3 trở đi mỗi bậc chỉ còn giảm thêm vài phần trăm.</p>
       <div class="ladder" id="ladder"></div>
       <div class="ladder-note">
         <span class="step-no" id="ladderTier">BẬC 3</span>
@@ -290,9 +289,6 @@ svg{display:block;width:100%;height:auto}
 
     <!-- Quy mô -->
     <section class="card">
-      <h2>Quy mô trung tâm</h2>
-      <p class="sub">Học viên chính thức là học viên được ghi danh vào khóa học và quản lý tiến độ theo lớp.</p>
-
       <div class="field">
         <div class="field-head">
           <label for="students">Số học viên chính thức / tháng</label>
@@ -307,10 +303,6 @@ svg{display:block;width:100%;height:auto}
         <div class="chips" id="sizeChips"></div>
       </div>
 
-      <div class="field">
-        <div class="field-head"><label>Cách tính tiền</label></div>
-        <p class="field-hint" id="modeHint"></p>
-      </div>
     </section>
 
     <!-- A.I -->
@@ -324,7 +316,6 @@ svg{display:block;width:100%;height:auto}
           <span class="mono" style="font-size:12.5px;color:var(--ink3)" id="wRate"></span>
         </div>
         <div class="incl"><span class="tick">✓</span><span>Tặng sẵn <b>4 lượt / tài khoản</b> mỗi tháng · 1 lượt = 1 bài Writing 2 Task</span></div>
-        <p class="field-hint">Kéo để tăng tổng số lượt mỗi tài khoản — chỉ phần vượt định mức tặng mới tính tiền:</p>
         <div class="rowc">
           <input type="range" id="extraW" min="4" max="28" step="1" value="4">
           <input type="text" inputmode="numeric" class="numbox" id="extraWN" value="4">
@@ -339,7 +330,6 @@ svg{display:block;width:100%;height:auto}
           <span class="mono" style="font-size:12.5px;color:var(--ink3)" id="sRate"></span>
         </div>
         <div class="incl"><span class="tick">✓</span><span>Tặng sẵn <b>4 câu / tài khoản</b> mỗi tháng · 1 lượt = 1 câu hỏi Speaking có chấm điểm &amp; nhận xét</span></div>
-        <p class="field-hint">Kéo để tăng tổng số câu mỗi tài khoản — chỉ phần vượt định mức tặng mới tính tiền:</p>
         <div class="rowc">
           <input type="range" id="extraS" min="4" max="64" step="1" value="4">
           <input type="text" inputmode="numeric" class="numbox" id="extraSN" value="4">
@@ -356,7 +346,6 @@ svg{display:block;width:100%;height:auto}
         <div class="incl" style="background:var(--amber-s);border-color:var(--amber-l);color:#6E4A0F">
           <span class="tick">◆</span><span>1 lượt = 1 đề hoàn chỉnh: <b>10 câu Speaking + 2 Task Writing + Reading + Listening</b>, có báo cáo band tổng và band từng kỹ năng.</span>
         </div>
-        <p class="field-hint">Số bài thi thử cho mỗi tài khoản (mặc định 0 — chỉ tính tiền khi bật):</p>
         <div class="rowc">
           <input type="range" id="mock" min="0" max="12" step="1" value="0">
           <input type="text" inputmode="numeric" class="numbox" id="mockN" value="0">
@@ -368,9 +357,6 @@ svg{display:block;width:100%;height:auto}
 
     <!-- Tùy chọn thêm -->
     <section class="card">
-      <h2>Tùy chọn thêm</h2>
-      <p class="sub">Các mục dưới đây tính riêng cho trung tâm, không nhân theo số tài khoản. Mặc định bằng 0 — chỉ tính tiền khi bật.</p>
-
       <div class="field">
         <div class="field-head">
           <label for="entry">Lượt test đầu vào</label>
@@ -570,7 +556,7 @@ function ladder(){
         <span class="step-price">${num(t.price)}đ</span>
         <span class="step-unit">/ học viên / tháng</span>
       </span></span>
-      <span class="step-range"><span class="step-no">BẬC ${t.no}</span><br>${rng} HV<br><span class="step-min">tối thiểu ${num(t.minFee)}đ</span></span>
+      <span class="step-range"><span class="step-no">BẬC ${t.no}</span><br>${rng} HV</span>
     </button>`;
   }).join('');
   document.querySelectorAll('.step').forEach(b=>b.onclick=()=>{
@@ -633,9 +619,6 @@ function controls(){
   $('mCalc').textContent=S.mockPer?`${vnd(S.mockPer*CFG.mock)} / tài khoản`:'chưa mua';
   setBox('storageN',num(S.storage)); $('storage').value=S.storage;
   $('storeRate').textContent=`${num(CFG.storagePerGB)}đ / GB / tháng · đã tặng 500 MB / tài khoản`;
-  $('modeHint').textContent = CFG.mode==='flat'
-    ? 'Toàn bộ học viên tính theo đơn giá của bậc đang đứng. Mỗi bậc có một giá gói tối thiểu — nếu số học viên nhân đơn giá thấp hơn giá gói thì hóa đơn lấy giá gói.'
-    : 'Lũy tiến: mỗi khoảng học viên tính theo đơn giá của khoảng đó, giống cách tính thuế bậc thang.';
   document.querySelectorAll('#modeSwitch button').forEach(b=>b.classList.toggle('on',b.dataset.mode===CFG.mode));
   document.querySelectorAll('#termSeg button').forEach(b=>b.classList.toggle('on',+b.dataset.m===S.term));
   document.querySelectorAll('#sizeChips .chip').forEach(b=>b.classList.toggle('on',+b.dataset.s===S.n));
