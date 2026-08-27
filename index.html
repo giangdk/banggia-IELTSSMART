@@ -422,7 +422,10 @@ svg{display:block;width:100%;height:auto}
         </div>
         <div class="addon-result" id="sResult"></div>
       </div>
+    </section>
 
+    <!-- Tùy chọn thêm -->
+    <section class="card">
       <div class="field">
         <div class="field-head">
           <label for="mock">Lượt thi thử IELTS full 4 kỹ năng</label>
@@ -436,10 +439,7 @@ svg{display:block;width:100%;height:auto}
         </div>
         <div class="addon-result" id="mResult"></div>
       </div>
-    </section>
 
-    <!-- Tùy chọn thêm -->
-    <section class="card">
       <div class="field">
         <div class="field-head">
           <label for="entry">Lượt test đầu vào</label>
@@ -452,16 +452,6 @@ svg{display:block;width:100%;height:auto}
           <span class="unit">lượt / trung tâm</span>
         </div>
         <div class="scale"><span>+0</span><span id="eCalc"></span><span>+2.000</span></div>
-      </div>
-
-      <div class="field">
-        <div class="field-head"><label for="storage">Dung lượng bổ sung</label></div>
-        <p class="field-hint" id="storeRate"></p>
-        <div class="rowc">
-          <input type="range" id="storage" min="0" max="1000" step="10" value="0">
-          <input type="text" inputmode="numeric" class="numbox" id="storageN" value="0">
-          <span class="unit">GB</span>
-        </div>
       </div>
     </section>
 
@@ -661,12 +651,12 @@ const CFG = {
   wExtra:2100, sExtra:3000, mock:27000, entry:13000,
   mockS:10, mockW:1,            // 1 bài thi thử = 10 câu Speaking + 1 lượt Writing (2 Task) + R + L
   cogsW:600,  cogsS:700, cogsRL:200, cogsEntry:3000,
-  storagePerGB:5000, freeMBperStudent:500,
+  freeMBperStudent:500,
   terms:[{m:1,d:0},{m:3,d:.05},{m:6,d:.09},{m:12,d:.13}],
   mode:'flat'
 };
 /* extraW / extraS / mockPer là ĐỊNH MỨC TRÊN MỖI TÀI KHOẢN — entry tính theo trung tâm */
-const S = {n:152, extraW:0, extraS:0, mockPer:0, entry:0, storage:0, term:1};
+const S = {n:152, extraW:0, extraS:0, mockPer:0, entry:0, term:1};
 
 const SMIN=25, SMAX=100000;
 const vnd = v => Math.round(v).toLocaleString('vi-VN')+'đ';
@@ -698,8 +688,7 @@ function calc(){
   const wQty=S.extraW*n, sQty=S.extraS*n, mQty=S.mockPer*n;   // định mức/tài khoản × số tài khoản
   const wCost=wQty*CFG.wExtra, sCost=sQty*CFG.sExtra, mCost=mQty*CFG.mock;
   const eQty=S.entry, eCost=eQty*CFG.entry;                    // test đầu vào tính theo trung tâm
-  const storeCost=S.storage*CFG.storagePerGB;
-  const addons=wCost+sCost+mCost+eCost+storeCost;
+  const addons=wCost+sCost+mCost+eCost;
   const gross=fee+addons;
   const term=CFG.terms.find(x=>x.m===S.term)||CFG.terms[0];
   const month=gross*(1-term.d);
@@ -708,7 +697,7 @@ function calc(){
   const cogs=(wFreeQty+wQty+mQty*CFG.mockW)*CFG.cogsW
             +(sFreeQty+sQty+mQty*CFG.mockS)*CFG.cogsS
             + mQty*CFG.cogsRL + eQty*CFG.cogsEntry;
-  return {n,t,fee,wFreeQty,sFreeQty,wQty,sQty,mQty,eQty,wCost,sCost,mCost,eCost,storeCost,addons,
+  return {n,t,fee,wFreeQty,sFreeQty,wQty,sQty,mQty,eQty,wCost,sCost,mCost,eCost,addons,
           gross,term,month,anchor,anchorFee,cogs};
 }
 
@@ -748,7 +737,6 @@ function invoice(){
   if(S.extraW) rows.push({k:'A.I Writing vượt định mức', s:`Tổng ${c.t.wFree+S.extraW} lượt/tài khoản · tính tiền ${S.extraW} lượt × ${num(c.n)} tài khoản`, v:vnd(c.wCost)});
   if(S.extraS) rows.push({k:'A.I Speaking vượt định mức', s:`Tổng ${c.t.sFree+S.extraS} câu/tài khoản · tính tiền ${S.extraS} câu × ${num(c.n)} tài khoản`, v:vnd(c.sCost)});
   if(S.entry) rows.push({k:'Lượt test đầu vào', s:`${num(S.entry)} lượt × ${num(CFG.entry)}đ · dùng chung cho trung tâm`, v:vnd(c.eCost)});
-  if(S.storage) rows.push({k:'Dung lượng bổ sung', s:`+${num(S.storage)} GB × ${num(CFG.storagePerGB)}đ`, v:vnd(c.storeCost)});
   $('lines').innerHTML=rows.map(r=>`<div class="li ${r.free?'free':''}"><span class="k">${r.k}${r.s?`<small>${r.s}</small>`:''}</span><span class="v">${r.v}</span></div>`).join('');
 
   const saved=c.anchor-c.month, savedPct=c.anchor?Math.round(saved/c.anchor*100):0;
@@ -789,12 +777,10 @@ function controls(){
   $('sResult').innerHTML=giftResult('câu',sBase,S.extraS,CFG.sExtra);
   $('mResult').innerHTML=`<span class="ar-parts"><b>${S.mockPer}</b> bài/tài khoản</span>
      <span class="ar-cost${S.mockPer?'':' muted'}">${S.mockPer?vnd(S.mockPer*CFG.mock)+' / tài khoản':'chưa mua'}</span>`;
-  setBox('storageN',num(S.storage)); $('storage').value=S.storage;
-  $('storeRate').textContent=`${num(CFG.storagePerGB)}đ / GB / tháng · đã tặng 500 MB / tài khoản`;
   document.querySelectorAll('#modeSwitch button').forEach(b=>b.classList.toggle('on',b.dataset.mode===CFG.mode));
   document.querySelectorAll('#termSeg button').forEach(b=>b.classList.toggle('on',+b.dataset.m===S.term));
   document.querySelectorAll('#sizeChips .chip').forEach(b=>b.classList.toggle('on',+b.dataset.s===S.n));
-  ['students','extraW','extraS','mock','entry','storage'].forEach(id=>{
+  ['students','extraW','extraS','mock','entry'].forEach(id=>{
     const el=$(id); const p=(el.value-el.min)/(el.max-el.min)*100;
     el.style.setProperty('--fill',p+'%');
   });
@@ -938,7 +924,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   bindNum('extraS','extraSN',v=>{const b=tierOf(S.n).sFree;S.extraS=Math.max(0,Math.min(60,v-b));render();});
   bindNum('mock','mockN',v=>{S.mockPer=Math.max(0,Math.min(60,v));render();});
   bindNum('entry','entryN',v=>{S.entry=Math.max(0,Math.min(50000,v));render();});
-  bindNum('storage','storageN',v=>{S.storage=Math.max(0,v);render();});
 
   $('btnPrint').onclick=()=>window.print();
   $('btnCopy').onclick=()=>{
@@ -947,7 +932,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 Quy mô: ${num(c.n)} tài khoản học viên chính thức (Bậc ${c.t.no} · ${num(c.t.price)}đ/tài khoản)
 Phí nền tảng: ${vnd(c.fee)}
 Tặng sẵn mỗi tài khoản: ${c.t.wFree} lượt Writing + ${c.t.sFree} câu Speaking + 500MB lưu trữ
-${S.mockPer?`Thi thử IELTS: ${S.mockPer} bài/tài khoản = ${vnd(c.mCost)}\n`:''}${S.extraW?`Writing mua thêm: ${S.extraW} lượt/tài khoản = ${vnd(c.wCost)}\n`:''}${S.extraS?`Speaking mua thêm: ${S.extraS} câu/tài khoản = ${vnd(c.sCost)}\n`:''}${S.entry?`Test đầu vào: ${num(S.entry)} lượt (dùng chung trung tâm) = ${vnd(c.eCost)}\n`:''}${S.storage?`Dung lượng bổ sung: ${num(S.storage)} GB = ${vnd(c.storeCost)}\n`:''}Cam kết ${c.term.m} tháng${c.term.d?` (chiết khấu ${Math.round(c.term.d*100)}%)`:''}
+${S.mockPer?`Thi thử IELTS: ${S.mockPer} bài/tài khoản = ${vnd(c.mCost)}\n`:''}${S.extraW?`Writing mua thêm: ${S.extraW} lượt/tài khoản = ${vnd(c.wCost)}\n`:''}${S.extraS?`Speaking mua thêm: ${S.extraS} câu/tài khoản = ${vnd(c.sCost)}\n`:''}${S.entry?`Test đầu vào: ${num(S.entry)} lượt (dùng chung trung tâm) = ${vnd(c.eCost)}\n`:''}Cam kết ${c.term.m} tháng${c.term.d?` (chiết khấu ${Math.round(c.term.d*100)}%)`:''}
 THÀNH TIỀN: ${vnd(c.month)}/tháng — ${vnd(c.month/c.n)}/tài khoản
 Tổng cả kỳ: ${vnd(c.month*c.term.m)}
 (Giá chưa gồm VAT)`;
