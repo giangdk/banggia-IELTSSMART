@@ -294,12 +294,12 @@ svg{display:block;width:100%;height:auto}
           <label for="students">Số học viên chính thức / tháng</label>
           <span class="mono" id="unitPrice" style="font-size:13px;color:var(--teal)"></span>
         </div>
-        <p class="field-hint">Tối thiểu 10 học viên. Mỗi học viên chính thức tương ứng một tài khoản đăng nhập. Có thể chuyển sang trạng thái lưu trữ và khôi phục khi cần.</p>
+        <p class="field-hint">Tối thiểu 25 học viên. Mỗi học viên chính thức tương ứng một tài khoản đăng nhập. Có thể chuyển sang trạng thái lưu trữ và khôi phục khi cần.</p>
         <div class="rowc">
           <input type="range" id="students" min="0" max="1000" value="0">
           <input type="text" inputmode="numeric" class="numbox" id="studentsN" value="152">
         </div>
-        <div class="scale"><span>10</span><span>100.000</span></div>
+        <div class="scale"><span>25</span><span>100.000</span></div>
         <div class="chips" id="sizeChips"></div>
       </div>
 
@@ -415,7 +415,7 @@ svg{display:block;width:100%;height:auto}
         <table class="tbl">
           <thead><tr>
             <th style="width:52px">Bậc</th><th>Khoảng học viên</th><th style="width:120px">Đơn giá / HV</th>
-            <th style="width:70px">Giảm</th><th style="width:130px">Giá gói tối thiểu</th>
+            <th style="width:70px">Giảm</th>
             <th style="width:95px">Writing tặng</th><th style="width:95px">Speaking tặng</th>
           </tr></thead>
           <tbody id="cfgRows"></tbody>
@@ -481,11 +481,11 @@ svg{display:block;width:100%;height:auto}
 /* ================= CẤU HÌNH GIÁ ================= */
 const CFG = {
   tiers:[
-    {no:1, min:10,   max:49,     price:49000, minFee:490000,    wFree:4, sFree:4},
-    {no:2, min:50,   max:119,    price:34000, minFee:2450000,   wFree:4, sFree:4},
-    {no:3, min:120,  max:299,    price:26000, minFee:4100000,   wFree:4, sFree:4},
-    {no:4, min:300,  max:999,    price:22000, minFee:7800000,   wFree:4, sFree:4},
-    {no:5, min:1000, max:100000, price:19000, minFee:22000000,  wFree:4, sFree:4}
+    {no:1, min:25,   max:49,     price:49000, wFree:4, sFree:4},
+    {no:2, min:50,   max:119,    price:34000, wFree:4, sFree:4},
+    {no:3, min:120,  max:299,    price:26000, wFree:4, sFree:4},
+    {no:4, min:300,  max:999,    price:22000, wFree:4, sFree:4},
+    {no:5, min:1000, max:100000, price:19000, wFree:4, sFree:4}
   ],
   wExtra:2100, sExtra:3000, mock:27000, entry:13000,
   mockS:10, mockW:1,            // 1 bài thi thử = 10 câu Speaking + 1 lượt Writing (2 Task) + R + L
@@ -497,7 +497,7 @@ const CFG = {
 /* extraW / extraS / mockPer là ĐỊNH MỨC TRÊN MỖI TÀI KHOẢN — entry tính theo trung tâm */
 const S = {n:152, extraW:0, extraS:0, mockPer:0, entry:0, storage:0, term:1};
 
-const SMIN=10, SMAX=100000;
+const SMIN=25, SMAX=100000;
 const vnd = v => Math.round(v).toLocaleString('vi-VN')+'đ';
 const num = v => Math.round(v).toLocaleString('vi-VN');
 const $ = id => document.getElementById(id);
@@ -510,7 +510,6 @@ const n2pos = n => Math.round(1000*Math.log(n/SMIN)/Math.log(SMAX/SMIN));
 
 /* ---- tính tiền ---- */
 const tierOf = n => CFG.tiers.find(t=>n>=t.min&&n<=t.max) || CFG.tiers[CFG.tiers.length-1];
-const floorOf = t => t.minFee||0;
 
 function studentFee(n){
   if(CFG.mode==='grad'){
@@ -518,8 +517,7 @@ function studentFee(n){
     CFG.tiers.forEach((t,i)=>{ const lo=i===0?1:t.min, c=Math.min(n,t.max)-lo+1; if(c>0) s+=c*t.price; });
     return s;
   }
-  const t=tierOf(n);
-  return Math.max(n*t.price, floorOf(t));
+  return n*tierOf(n).price;
 }
 
 function calc(){
@@ -549,7 +547,7 @@ function ladder(){
   $('ladder').innerHTML=CFG.tiers.map(t=>{
     const off=Math.round((1-t.price/base)*100);
     const h=Math.max(30, Math.round(t.price/base*100));
-    const rng=t.no===1?`10 – ${num(t.max)}`:t.no===CFG.tiers.length?`${num(t.min)}+`:`${num(t.min)} – ${num(t.max)}`;
+    const rng=t.no===1?`${num(t.min)} – ${num(t.max)}`:t.no===CFG.tiers.length?`${num(t.min)}+`:`${num(t.min)} – ${num(t.max)}`;
     return `<button class="step ${t.no===cur.no?'active':''}" data-tier="${t.no}">
       <span class="step-badge ${off===0?'is-base':''}">${off===0?'GIÁ GỐC':'−'+off+'%'}</span>
       <span class="step-track"><span class="step-bar" style="height:${h}%">
@@ -633,10 +631,9 @@ function internalPanel(){
   const base=CFG.tiers[0].price;
   $('cfgRows').innerHTML=CFG.tiers.map((t,i)=>`<tr>
     <td class="mono">${t.no}</td>
-    <td class="mono" style="color:var(--ink2)">${t.no===1?'10 – ':''}${t.no===1?num(t.max):num(t.min)+' – '+num(t.max)}</td>
+    <td class="mono" style="color:var(--ink2)">${num(t.min)} – ${num(t.max)}</td>
     <td><input data-f="price" data-i="${i}" value="${t.price}"></td>
     <td class="pct">${i===0?'—':'−'+Math.round((1-t.price/base)*100)+'%'}</td>
-    <td><input data-f="minFee" data-i="${i}" value="${t.minFee}"></td>
     <td><input data-f="wFree" data-i="${i}" value="${t.wFree}"></td>
     <td><input data-f="sFree" data-i="${i}" value="${t.sFree}"></td>
   </tr>`).join('');
@@ -665,17 +662,9 @@ function flags(){
     const cell=tr.querySelector('.pct');
     if(cell) cell.textContent = i===0 ? '—' : '−'+Math.round((1-CFG.tiers[i].price/b0)*100)+'%';
   });
-  // 1. giá gói tối thiểu
+  // 1. đơn giá theo bậc
   if(CFG.mode==='flat'){
-    const fl=floorOf(c.t), on=c.n*c.t.price<fl, thr=Math.ceil(fl/c.t.price);
-    const bad=CFG.tiers.filter(t=>t.no>1&&t.minFee<CFG.tiers[t.no-2].max*CFG.tiers[t.no-2].price);
-    const spans=CFG.tiers.filter(t=>t.no>1&&t.minFee>t.min*t.price)
-      .map(t=>`Bậc ${t.no}: ${num(t.min)}–${num(Math.ceil(t.minFee/t.price)-1)} HV`);
-    out.push(on
-      ? `<div class="flag warn"><b>Quy mô này đang trả giá gói tối thiểu.</b> ${num(c.n)} HV × ${num(c.t.price)}đ = ${vnd(c.n*c.t.price)}, thấp hơn giá gói tối thiểu ${vnd(fl)} của Bậc ${c.t.no}. Hóa đơn lấy giá gói, tức ${vnd(c.fee/c.n)}/HV. Trung tâm hưởng đúng ${num(c.t.price)}đ/HV từ ${num(thr)} HV trở lên.</div>`
-      : `<div class="flag ok">Quy mô này hưởng đúng đơn giá niêm yết ${num(c.t.price)}đ/HV, vượt giá gói tối thiểu ${vnd(fl)}.</div>`);
-    if(bad.length) out.push(`<div class="flag warn"><b>Giá gói tối thiểu đang đặt quá thấp ở ${bad.map(t=>'Bậc '+t.no).join(', ')}.</b> Khách ở cuối bậc dưới sẽ trả nhiều hơn khách đầu bậc trên — tăng học viên mà hóa đơn giảm. Nâng giá gói tối thiểu lên ít nhất ${bad.map(t=>vnd(CFG.tiers[t.no-2].max*CFG.tiers[t.no-2].price)).join(' / ')}.</div>`);
-    if(spans.length) out.push(`<div class="flag ok">Vùng áp giá gói tối thiểu — ${spans.join('; ')}. Sale cần biết để không hứa sai đơn giá cho nhóm này.</div>`);
+    out.push(`<div class="flag ok">Đồng giá theo bậc: mọi quy mô trong Bậc ${c.t.no} đều trả đúng ${num(c.t.price)}đ/HV — ${num(c.n)} HV × ${num(c.t.price)}đ = ${vnd(c.fee)}. Không có mức sàn, hóa đơn luôn tỉ lệ thuận với số học viên.</div>`);
   } else {
     out.push(`<div class="flag ok">Lũy tiến: đơn giá bình quân giảm mượt, không có vùng mức sàn và không có bước nhảy ngược. Đổi lại, đơn giá thực tế ${vnd(c.fee/c.n)}/HV cao hơn giá in ${num(c.t.price)}đ của Bậc ${c.t.no}, nên bảng giá phải ghi rõ &ldquo;áp cho phần học viên trong khoảng&rdquo;.</div>`);
   }
