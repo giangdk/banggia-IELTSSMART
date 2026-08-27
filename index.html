@@ -51,6 +51,15 @@ a{color:var(--teal)}
 .brand p{margin:2px 0 0;font-size:12.5px;color:#8FA9AC}
 .topmeta{font-family:var(--mono);font-size:12px;color:#8FA9AC;text-align:right}
 .topmeta b{color:#fff;font-weight:500}
+.topbanner{
+  margin-top:14px;padding-top:13px;border-top:1px solid rgba(255,255,255,.14);
+  display:flex;align-items:center;gap:11px;flex-wrap:wrap;font-size:13px;color:#C9DAD8;line-height:1.5;
+}
+.topbanner .tag{
+  font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  background:var(--amber);color:#25180A;padding:4px 10px;border-radius:999px;flex:none;
+}
+.topbanner b{color:#fff;font-weight:700}
 
 .layout{max-width:1200px;margin:0 auto;padding:26px 24px 80px;display:grid;grid-template-columns:minmax(0,1fr) 372px;gap:26px;align-items:start}
 @media(max-width:980px){.layout{grid-template-columns:1fr;padding-bottom:40px}}
@@ -138,12 +147,14 @@ input[type=range]:focus-visible{box-shadow:0 0 0 3px var(--teal-s)}
 .chip:hover{border-color:var(--teal);color:var(--teal)}
 .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
 
-.incl{
-  display:flex;gap:9px;align-items:flex-start;background:var(--teal-s);border:1px solid #CFE3DF;
-  border-radius:8px;padding:9px 12px;font-size:13px;color:var(--teal-d);margin-bottom:10px;
+.addon-result{
+  margin-top:11px;background:#F7F9F9;border:1px solid var(--line2);border-radius:8px;
+  padding:9px 13px;font-family:var(--mono);font-size:12.5px;color:var(--ink2);
+  display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:5px 14px;
 }
-.incl .tick{font-weight:700;line-height:1.35}
-.incl b{font-family:var(--mono);font-weight:600}
+.addon-result .ar-parts b{font-weight:700;color:var(--ink)}
+.addon-result .ar-cost{font-weight:700;color:var(--teal-d)}
+.addon-result .ar-cost.muted{color:var(--ink3);font-weight:500}
 
 .seg{display:flex;gap:6px;flex-wrap:wrap}
 .seg button{
@@ -167,6 +178,74 @@ input[type=range]:focus-visible{box-shadow:0 0 0 3px var(--teal-s)}
 @media(max-width:700px){.feats{grid-template-columns:1fr}}
 .feats li{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;color:var(--ink2);line-height:1.45}
 .feats li::before{content:"✓";color:var(--teal);font-weight:700;font-size:12px;line-height:1.55;flex:none}
+
+.soon-head{display:flex;align-items:center;gap:8px;margin:20px 0 10px;padding-top:16px;border-top:1px solid var(--line2)}
+.soon-head .eyebrow{margin:0}
+.soon-badge{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:var(--line2);color:var(--ink3);border:1px solid var(--line);padding:2px 7px;border-radius:5px}
+.feats-soon{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:9px 22px}
+@media(max-width:700px){.feats-soon{grid-template-columns:1fr}}
+.feats-soon li{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;color:var(--ink3);line-height:1.45}
+.feats-soon li::before{content:"◷";color:var(--ink3);font-weight:700;font-size:12px;line-height:1.55;flex:none}
+
+/* ---------- case study: trước / sau ---------- */
+.case-hero{
+  background:var(--amber);border-radius:10px;padding:17px 20px;margin:14px 0 14px;
+}
+.case-hero .chl{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:rgba(37,24,10,.68)}
+.case-hero .chv{font-family:var(--mono);font-size:40px;font-weight:800;color:#000;letter-spacing:-.02em;line-height:1.1;margin-top:6px}
+.case-hero .chv b{font-size:14.5px;font-weight:600;margin-left:8px;color:rgba(37,24,10,.68)}
+.chpills{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chpill{font-family:var(--mono);font-size:12.5px;font-weight:600;background:var(--ink);color:#D8E4E2;padding:6px 12px;border-radius:999px}
+.chpill b{font-weight:800;color:#FBCE7E;font-size:13.5px}
+.case-hero .chfoot{font-size:11.5px;color:rgba(37,24,10,.68);margin-top:11px;padding-top:10px;border-top:1px solid rgba(37,24,10,.16)}
+.case-hero .chfoot b{font-weight:700;color:#1A1006}
+
+.case-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}
+@media(max-width:700px){.case-stats{grid-template-columns:1fr}}
+.case-stat{border-radius:8px;padding:13px 14px;border:1px solid var(--line)}
+.case-stat.teal{background:var(--teal-s);border-color:#CFE3DF}
+.case-stat.amber{background:var(--amber-s);border-color:var(--amber-l)}
+.cs-lbl{font-size:11.5px;line-height:1.35;font-weight:600;color:var(--ink2)}
+.cs-val{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px;margin-top:9px;font-family:var(--mono)}
+.cs-val .old{font-size:13px;color:var(--ink3);text-decoration:line-through;font-weight:600}
+.cs-val .arrow{font-size:13px;color:var(--ink3)}
+.cs-val .new{font-size:24px;font-weight:800;letter-spacing:-.02em}
+.case-stat.teal .cs-val .new{color:var(--teal)}
+.case-stat.amber .cs-val .new{color:var(--amber)}
+.cs-val .unit{font-size:11px;color:var(--ink3);font-weight:600;margin-left:1px}
+.cs-sub{font-size:11.5px;margin-top:7px;line-height:1.45}
+.case-stat.amber .cs-sub{color:#7C5A22}
+.case-stat.teal .cs-sub{color:var(--ink2)}
+.cs-sub b{font-weight:700}
+.case-stat.amber .cs-sub b{color:#6E4A0F}
+.case-stat.teal .cs-sub b{color:var(--teal-d)}
+
+.case-adv{
+  display:flex;gap:12px;align-items:flex-start;margin-top:2px;
+  border:1px solid var(--line);border-left:3px solid var(--teal);border-radius:8px;
+  padding:13px 16px;background:#FAFCFB;
+}
+.case-adv .badge{
+  flex:none;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--teal-d);background:var(--teal-s);border:1px solid #CFE3DF;padding:4px 9px;border-radius:999px;
+}
+.case-adv .body b{display:block;font-size:14px;color:var(--ink);margin-bottom:4px;letter-spacing:-.01em}
+.case-adv .body p{margin:0;font-size:13px;color:var(--ink2);line-height:1.55}
+.case-adv .body p b{display:inline;font-weight:700;color:var(--ink)}
+@media(max-width:560px){.case-adv{flex-direction:column}}
+
+.cmp-wrap{overflow-x:auto;margin-top:4px}
+.cmp-tbl{width:100%;border-collapse:separate;border-spacing:0 8px;font-size:13px;min-width:640px}
+.cmp-tbl thead th{text-align:left;font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);padding:0 14px 8px}
+.cmp-tbl thead th:nth-child(2){color:var(--ink3)}
+.cmp-tbl thead th:nth-child(3){color:var(--teal-d)}
+.cmp-tbl td{padding:12px 14px;vertical-align:top;line-height:1.55}
+.cmp-tbl td.cname{width:150px;font-weight:600;color:var(--ink);font-size:13px;padding-left:2px}
+.cmp-tbl td.cname span{display:block;font-size:11px;color:var(--ink3);font-weight:500;margin-top:2px}
+.cmp-tbl td.bad{background:var(--line2);color:var(--ink2);border-radius:8px 0 0 8px}
+.cmp-tbl td.good{background:var(--teal-s);color:var(--teal-d);border-radius:0 8px 8px 0}
+.cmp-tbl td.bad b{color:var(--ink);font-weight:700}
+.cmp-tbl td.good b{color:var(--teal-d);font-weight:800}
 
 .switch{display:flex;gap:0;border:1px solid var(--line);border-radius:8px;overflow:hidden;width:fit-content}
 .switch button{padding:7px 14px;border:0;background:var(--surface);cursor:pointer;font-family:inherit;font-size:13px;color:var(--ink2)}
@@ -259,15 +338,21 @@ svg{display:block;width:100%;height:auto}
 <body>
 
 <header class="topbar">
-  <div class="inner brandrow">
-    <div class="brand">
-      <div class="mark">88</div>
-      <div>
-        <h1>IELTSSMART — Bảng giá linh hoạt</h1>
-        <p>Nền tảng luyện thi &amp; chấm A.I cho trung tâm Anh ngữ · CTCP Công nghệ NOVAFORGE</p>
+  <div class="inner">
+    <div class="brandrow">
+      <div class="brand">
+        <div class="mark">88</div>
+        <div>
+          <h1>IELTSSMART — Bảng giá linh hoạt</h1>
+          <p>Nền tảng luyện thi &amp; chấm A.I cho trung tâm Anh ngữ · CTCP Công nghệ NOVAFORGE</p>
+        </div>
       </div>
+      <div class="topmeta">Báo giá tham khảo · <b id="today"></b><br>Quy mô càng lớn, đơn giá mỗi học viên càng giảm</div>
     </div>
-    <div class="topmeta">Báo giá tham khảo · <b id="today"></b><br>Quy mô càng lớn, đơn giá mỗi học viên càng giảm</div>
+    <div class="topbanner">
+      <span class="tag">Nhượng quyền công nghệ</span>
+      <span>Sở hữu trọn vẹn nền tảng luyện thi &amp; chấm A.I dưới thương hiệu, tên miền riêng của trung tâm — <b>chi phí nền tảng 0đ</b>, chỉ trả theo lượt sử dụng thực tế.</span>
+    </div>
   </div>
 </header>
 
@@ -315,13 +400,13 @@ svg{display:block;width:100%;height:auto}
           <label for="extraW">A.I chấm Writing</label>
           <span class="mono" style="font-size:12.5px;color:var(--ink3)" id="wRate"></span>
         </div>
-        <div class="incl"><span class="tick">✓</span><span>Tặng sẵn <b>4 lượt / tài khoản</b> mỗi tháng · 1 lượt = 1 bài Writing 2 Task</span></div>
+        <p class="field-hint">1 lượt = 1 bài Writing.</p>
         <div class="rowc">
           <input type="range" id="extraW" min="4" max="28" step="1" value="4">
           <input type="text" inputmode="numeric" class="numbox" id="extraWN" value="4">
           <span class="unit">lượt / tài khoản</span>
         </div>
-        <div class="scale"><span id="wMin"></span><span id="wCalc"></span><span id="wMax"></span></div>
+        <div class="addon-result" id="wResult"></div>
       </div>
 
       <div class="field">
@@ -329,13 +414,13 @@ svg{display:block;width:100%;height:auto}
           <label for="extraS">A.I chấm Speaking</label>
           <span class="mono" style="font-size:12.5px;color:var(--ink3)" id="sRate"></span>
         </div>
-        <div class="incl"><span class="tick">✓</span><span>Tặng sẵn <b>4 câu / tài khoản</b> mỗi tháng · 1 lượt = 1 câu hỏi Speaking có chấm điểm &amp; nhận xét</span></div>
+        <p class="field-hint">1 lượt = 1 câu hỏi Speaking có chấm điểm &amp; nhận xét.</p>
         <div class="rowc">
           <input type="range" id="extraS" min="4" max="64" step="1" value="4">
           <input type="text" inputmode="numeric" class="numbox" id="extraSN" value="4">
           <span class="unit">câu / tài khoản</span>
         </div>
-        <div class="scale"><span id="sMin"></span><span id="sCalc"></span><span id="sMax"></span></div>
+        <div class="addon-result" id="sResult"></div>
       </div>
 
       <div class="field">
@@ -343,15 +428,13 @@ svg{display:block;width:100%;height:auto}
           <label for="mock">Lượt thi thử IELTS full 4 kỹ năng</label>
           <span class="mono" style="font-size:12.5px;color:var(--ink3)" id="mRate"></span>
         </div>
-        <div class="incl" style="background:var(--amber-s);border-color:var(--amber-l);color:#6E4A0F">
-          <span class="tick">◆</span><span>1 lượt = 1 đề hoàn chỉnh: <b>10 câu Speaking + 2 Task Writing + Reading + Listening</b>, có báo cáo band tổng và band từng kỹ năng.</span>
-        </div>
+        <p class="field-hint">1 lượt = 1 đề hoàn chỉnh: <b>10 câu Speaking + 2 Task Writing + Reading + Listening</b>, có báo cáo band tổng và band từng kỹ năng.</p>
         <div class="rowc">
           <input type="range" id="mock" min="0" max="12" step="1" value="0">
           <input type="text" inputmode="numeric" class="numbox" id="mockN" value="0">
           <span class="unit">bài / tài khoản</span>
         </div>
-        <div class="scale"><span>+0</span><span id="mCalc"></span><span>+12</span></div>
+        <div class="addon-result" id="mResult"></div>
       </div>
     </section>
 
@@ -396,6 +479,94 @@ svg{display:block;width:100%;height:auto}
       </div>
 
       <ul class="feats" id="feats"></ul>
+
+      <div class="soon-head">
+        <span class="eyebrow">Đang phát triển</span>
+        <span class="soon-badge">Tính năng sắp có</span>
+      </div>
+      <ul class="feats-soon" id="featsSoon"></ul>
+    </section>
+
+    <!-- So sánh trước / sau khi triển khai -->
+    <section class="card">
+      <div class="eyebrow">Bài toán thực tế</div>
+      <h2 style="margin-top:6px">Hiệu quả vận hành trước và sau khi triển khai</h2>
+      <p class="sub">Minh hoạ trên một trung tâm quy mô 100 học viên đang tổ chức thi giữa khoá, cuối khoá và chấm bài tập về nhà thủ công.</p>
+
+      <div class="case-hero">
+        <span class="chl">Tổng lợi ích tài chính ước tính</span>
+        <div class="chv">≈ 24 – 44<b>triệu đồng / tháng</b></div>
+        <div class="chpills">
+          <span class="chpill">Tiết kiệm chi phí <b>13,9tr</b></span>
+          <span class="chpill">+ Doanh thu mới <b>10–30tr</b></span>
+        </div>
+        <div class="chfoot">Ước tính trên quy mô tham chiếu <b>100 học viên</b> — quy mô càng lớn, lợi ích càng cộng dồn.</div>
+      </div>
+
+      <div class="case-stats">
+        <div class="case-stat teal">
+          <div class="cs-lbl">Thời gian trả kết quả BTVN &amp; thi thử</div>
+          <div class="cs-val"><span class="old">1–2 ngày</span><span class="arrow">→</span><span class="new">1–2 giờ</span></div>
+        </div>
+        <div class="case-stat amber">
+          <div class="cs-lbl">Chi phí chấm bài &amp; tổ chức thi / tháng</div>
+          <div class="cs-val"><span class="old">20tr</span><span class="arrow">→</span><span class="new">6,1tr</span></div>
+          <div class="cs-sub">Tiết kiệm <b>13,9 triệu đồng</b> / tháng</div>
+        </div>
+        <div class="case-stat amber">
+          <div class="cs-lbl">Doanh thu mới từ học viên tự học</div>
+          <div class="cs-val"><span class="new">+10 – 30tr</span><span class="unit">/ tháng</span></div>
+          <div class="cs-sub">Bán tài khoản luyện tập <b>299k–499k</b>, giá vốn <b>~100k</b></div>
+        </div>
+      </div>
+
+      <div class="case-adv">
+        <span class="badge">Lợi thế cạnh tranh</span>
+        <div class="body">
+          <b>Tiên phong ứng dụng A.I trong luyện thi &amp; quản lý học tập</b>
+          <p>Khác biệt hoá thương hiệu, minh bạch kết quả theo thời gian thực với <b>học viên &amp; phụ huynh</b>, tăng tỉ lệ giữ chân và giới thiệu học viên mới.</p>
+        </div>
+      </div>
+
+      <div class="cmp-wrap">
+        <table class="cmp-tbl">
+          <thead>
+            <tr><th></th><th>Trước khi triển khai</th><th>Sau khi triển khai</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="cname">Thi giữa khoá &amp; cuối khoá<span>100 bài / tháng</span></td>
+              <td class="bad">Thi phân tán trên giấy &amp; ghi âm, tốn <b>~25 giờ</b> chấm bài/tháng, trả kết quả sau <b>2–3 ngày</b>, không có trải nghiệm thi thật.</td>
+              <td class="good">Thi thử mô phỏng đúng cấu trúc phòng thi IELTS, A.I chấm &amp; trả kết quả tự động trong <b>1–2 giờ</b>.</td>
+            </tr>
+            <tr>
+              <td class="cname">Chấm bài tập về nhà<span>400 Speaking + 400 Writing / tháng</span></td>
+              <td class="bad">Chấm thủ công <b>~5 phút/bài</b>, tốn <b>~70 giờ</b> nhân sự giáo viên/tháng, học viên chờ lâu mới có kết quả.</td>
+              <td class="good">A.I chấm theo tiêu chí band descriptor IELTS, trả kết quả &amp; nhận xét chi tiết trong <b>1–2 giờ</b>.</td>
+            </tr>
+            <tr>
+              <td class="cname">Quản lý dữ liệu học tập<span>&nbsp;</span></td>
+              <td class="bad">Phân mảnh trên nhiều nền tảng (Zalo, Google Drive…), khó tổng hợp &amp; theo dõi tiến độ.</td>
+              <td class="good">Tập trung trên <b>một hệ thống duy nhất</b>, dễ tra cứu theo từng học viên.</td>
+            </tr>
+            <tr>
+              <td class="cname">Test đầu vào<span>&amp; tỉ lệ chốt sale</span></td>
+              <td class="bad">Trả kết quả chậm, khách hàng tiềm năng "nguội" trước khi được tư vấn, ảnh hưởng tỉ lệ chốt sale.</td>
+              <td class="good">Trả kết quả trong <b>5 phút</b>, giữ khách hàng "nóng", hỗ trợ đội sale chốt đơn hiệu quả hơn.</td>
+            </tr>
+            <tr>
+              <td class="cname">Chi phí vận hành<span>chấm bài &amp; tổ chức thi / tháng</span></td>
+              <td class="bad">Chi phí nhân sự <b>~100 giờ/tháng</b>, tương đương <b>~20 triệu đồng</b>.</td>
+              <td class="good">Hệ thống A.I, chi phí còn <b>~6,1 triệu đồng</b> — tiết kiệm <b>13,9 triệu đồng</b>/tháng.</td>
+            </tr>
+            <tr>
+              <td class="cname">Nguồn doanh thu mới<span>&nbsp;</span></td>
+              <td class="bad">Chưa có kênh doanh thu từ việc học viên tự luyện tập ngoài giờ học trên lớp.</td>
+              <td class="good">Bán tài khoản luyện tập <b>299k–499k</b> cho học viên tự học, thu thêm <b>10–30 triệu đồng</b>/tháng.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <!-- Cam kết -->
@@ -482,16 +653,16 @@ svg{display:block;width:100%;height:auto}
 const CFG = {
   tiers:[
     {no:1, min:25,   max:49,     price:49000, wFree:4, sFree:4},
-    {no:2, min:50,   max:119,    price:34000, wFree:4, sFree:4},
-    {no:3, min:120,  max:299,    price:26000, wFree:4, sFree:4},
-    {no:4, min:300,  max:999,    price:22000, wFree:4, sFree:4},
-    {no:5, min:1000, max:100000, price:19000, wFree:4, sFree:4}
+    {no:2, min:50,   max:119,    price:46550, wFree:4, sFree:4},
+    {no:3, min:120,  max:299,    price:38700, wFree:4, sFree:4},
+    {no:4, min:300,  max:999,    price:36750, wFree:4, sFree:4},
+    {no:5, min:1000, max:100000, price:35750, wFree:4, sFree:4}
   ],
   wExtra:2100, sExtra:3000, mock:27000, entry:13000,
   mockS:10, mockW:1,            // 1 bài thi thử = 10 câu Speaking + 1 lượt Writing (2 Task) + R + L
   cogsW:600,  cogsS:700, cogsRL:200, cogsEntry:3000,
   storagePerGB:5000, freeMBperStudent:500,
-  terms:[{m:1,d:0},{m:3,d:.08},{m:6,d:.15},{m:12,d:.25}],
+  terms:[{m:1,d:0},{m:3,d:.05},{m:6,d:.09},{m:12,d:.13}],
   mode:'flat'
 };
 /* extraW / extraS / mockPer là ĐỊNH MỨC TRÊN MỖI TÀI KHOẢN — entry tính theo trung tâm */
@@ -562,9 +733,10 @@ function ladder(){
     setStudents(t.no===1?30:Math.min(t.max, Math.round(t.min*1.4)));
   });
   const off=Math.round((1-cur.price/base)*100);
+  const tier2Off=Math.round((1-CFG.tiers[1].price/base)*100);
   $('ladderTier').textContent='BẬC '+cur.no;
   $('ladderText').innerHTML = off===0
-    ? `Quy mô hiện tại <b>${num(S.n)} học viên</b> — đang ở mức giá gốc. Đạt <b>50 học viên</b> là bước sang Bậc 2, rẻ hơn 27%.`
+    ? `Quy mô hiện tại <b>${num(S.n)} học viên</b> — đang ở mức giá gốc. Đạt <b>${num(CFG.tiers[1].min)} học viên</b> là bước sang Bậc 2, rẻ hơn ${tier2Off}%.`
     : `Quy mô hiện tại <b>${num(S.n)} học viên</b> — đơn giá <b>${num(cur.price)}đ/HV</b>, rẻ hơn <b>${off}%</b> so với Bậc 1.`;
 }
 
@@ -606,15 +778,17 @@ function controls(){
   $('extraW').min=wBase; $('extraW').max=wBase+24; $('extraW').value=wBase+S.extraW;
   $('extraS').min=sBase; $('extraS').max=sBase+60; $('extraS').value=sBase+S.extraS;
   setBox('extraWN',wBase+S.extraW); setBox('extraSN',sBase+S.extraS);
-  $('wMin').textContent=`${wBase} đã tặng`; $('wMax').textContent=`${wBase+24}`;
-  $('sMin').textContent=`${sBase} đã tặng`; $('sMax').textContent=`${sBase+60}`;
   $('mock').value=S.mockPer; setBox('mockN',S.mockPer);
   $('entry').value=S.entry; setBox('entryN',num(S.entry));
   $('eCalc').textContent=S.entry?`${num(S.entry)} lượt = ${vnd(c.eCost)}`:'chưa mua';
-  const per=(q,rate,zero)=>q?`mua thêm ${q} · ${vnd(q*rate)} / tài khoản`:zero;
-  $('wCalc').textContent=per(S.extraW,CFG.wExtra,'chỉ dùng lượt tặng');
-  $('sCalc').textContent=per(S.extraS,CFG.sExtra,'chỉ dùng lượt tặng');
-  $('mCalc').textContent=S.mockPer?`${vnd(S.mockPer*CFG.mock)} / tài khoản`:'chưa mua';
+
+  const giftResult=(unit,base,extra,rate)=>
+    `<span class="ar-parts"><b>${base}</b> tặng${extra?` + <b>${extra}</b> mua thêm`:''} = <b>${base+extra}</b> ${unit}/tài khoản</span>
+     <span class="ar-cost${extra?'':' muted'}">${extra?vnd(extra*rate)+' / tài khoản':'chỉ dùng lượt tặng'}</span>`;
+  $('wResult').innerHTML=giftResult('lượt',wBase,S.extraW,CFG.wExtra);
+  $('sResult').innerHTML=giftResult('câu',sBase,S.extraS,CFG.sExtra);
+  $('mResult').innerHTML=`<span class="ar-parts"><b>${S.mockPer}</b> bài/tài khoản</span>
+     <span class="ar-cost${S.mockPer?'':' muted'}">${S.mockPer?vnd(S.mockPer*CFG.mock)+' / tài khoản':'chưa mua'}</span>`;
   setBox('storageN',num(S.storage)); $('storage').value=S.storage;
   $('storeRate').textContent=`${num(CFG.storagePerGB)}đ / GB / tháng · đã tặng 500 MB / tài khoản`;
   document.querySelectorAll('#modeSwitch button').forEach(b=>b.classList.toggle('on',b.dataset.mode===CFG.mode));
@@ -739,15 +913,19 @@ document.addEventListener('DOMContentLoaded',()=>{
     'Phòng thi ảo đủ 4 kỹ năng Listening, Reading, Writing, Speaking',
     'Chấm Writing và Speaking bằng A.I theo tiêu chí band descriptor IELTS, có nhận xét từng tiêu chí',
     'Chống gian lận: chặn sao chép, phát hiện chuyển tab, khóa sửa lỗi chính tả, nhận diện bài học thuộc',
-    'Quản lý chương trình học, giao bài tập với 10+ dạng bài',
     'Kho đề thi uy tín có sẵn và được cập nhật liên tục',
-    'Nhập đề và bài tập từ file PDF bằng A.I',
-    'Bảo mật tài liệu và video bài giảng, chống phát tán và tải xuống',
     'Website riêng chuẩn SEO, dễ lên top Google',
-    'Tặng kèm quản lý trung tâm: điểm danh, học phí, tài chính, chấm công',
     'Phân quyền và không giới hạn số tài khoản nhân viên',
-    'Báo cáo tiến độ cho học viên và phụ huynh theo từng kỹ năng',
     'Góp ý tính năng và nhận cập nhật định kỳ'
+  ].map(f=>`<li>${f}</li>`).join('');
+
+  $('featsSoon').innerHTML=[
+    'Flashcard và từ vựng theo chủ đề',
+    'Bảo mật tài liệu và video bài giảng',
+    'Quản lý chương trình học, giao bài tập với 10+ dạng bài',
+    'Nhập đề và bài tập từ file PDF bằng A.I',
+    'Quản lý trung tâm: điểm danh, học phí',
+    'Báo cáo tiến độ cho học viên và phụ huynh theo từng kỹ năng'
   ].map(f=>`<li>${f}</li>`).join('');
 
   $('termSeg').innerHTML=CFG.terms.map(t=>`<button data-m="${t.m}"><span class="t">${t.m} tháng</span><span class="d">${t.d?'−'+Math.round(t.d*100)+'%':'giá chuẩn'}</span></button>`).join('');
