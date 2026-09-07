@@ -428,11 +428,11 @@ svg{display:block;width:100%;height:auto}
           <label for="extraS">A.I chấm Speaking</label>
           <span class="mono" style="font-size:12.5px;color:var(--ink3)" id="sRate"></span>
         </div>
-        <p class="field-hint">1 câu = 1 câu hỏi Speaking có chấm điểm &amp; nhận xét.</p>
+        <p class="field-hint">1 part = 1 phần thi Speaking (1–4 câu) có chấm điểm &amp; nhận xét.</p>
         <div class="rowc">
-          <input type="range" id="extraS" min="4" max="64" step="1" value="4">
+          <input type="range" id="extraS" min="4" max="24" step="1" value="4">
           <input type="text" inputmode="numeric" class="numbox" id="extraSN" value="4">
-          <span class="unit">câu / tài khoản</span>
+          <span class="unit">part / tài khoản</span>
         </div>
       </div>
 
@@ -441,7 +441,7 @@ svg{display:block;width:100%;height:auto}
           <label for="mock">Lượt thi IELTS full 4 kỹ năng</label>
           <span class="mono" style="font-size:12.5px;color:var(--ink3)" id="mRate"></span>
         </div>
-        <p class="field-hint">1 lượt = 1 đề hoàn chỉnh: <b>10 câu Speaking + 2 Task Writing + Reading + Listening</b>, có báo cáo band tổng và band từng kỹ năng.</p>
+        <p class="field-hint">1 lượt = 1 đề hoàn chỉnh: <b>3 part Speaking + 2 Task Writing + Reading + Listening</b>, có báo cáo band tổng và band từng kỹ năng.</p>
         <div class="rowc">
           <input type="range" id="mock" min="0" max="12" step="1" value="0">
           <input type="text" inputmode="numeric" class="numbox" id="mockN" value="0">
@@ -676,9 +676,9 @@ const CFG = {
     {no:4, min:300,  max:999,    price:36750, wFree:4, sFree:4},
     {no:5, min:1000, max:100000, price:35750, wFree:4, sFree:4}
   ],
-  wExtra:2500, sExtra:3000, mock:27000, entry:13000,
+  wExtra:2500, sExtra:8200, mock:27000, entry:13000,
   overPct:150,                  // lượt dùng vượt số đã mua = 150% đơn giá mua trước
-  mockS:10, mockW:1,            // 1 bài thi thử = 10 câu Speaking + 1 lượt Writing (2 Task) + R + L
+  mockS:3, mockW:1,             // 1 bài thi = 3 part Speaking (Part 1–3) + 1 lượt Writing (2 Task) + R + L
   cogsW:600,  cogsS:700, cogsRL:200, cogsEntry:3000,
   freeMBperStudent:500,
   terms:[{m:1,d:0},{m:3,d:.05},{m:6,d:.09},{m:12,d:.13}],
@@ -763,13 +763,13 @@ function ladder(){
 
 function invoice(){
   const c=calc(), rows=[];
-  rows.push({k:`Tài khoản học viên chính thức (${num(c.n)})`, s:`Đã gồm ${c.t.wFree} câu Writing + ${c.t.sFree} câu Speaking / tài khoản`, v:vnd(c.fee)});
+  rows.push({k:`Tài khoản học viên chính thức (${num(c.n)})`, s:`Đã gồm ${c.t.wFree} câu Writing + ${c.t.sFree} part Speaking / tài khoản`, v:vnd(c.fee)});
   rows.push({k:'Lưu trữ đi kèm', s:`500 MB / tài khoản`, v:'Miễn phí', cls:'free'});
   if(S.mockPer) rows.push({k:'Lượt thi IELTS full 4 kỹ năng', s:`${S.mockPer} bài / tài khoản × ${num(c.n)} tài khoản`, v:vnd(c.mCost)});
   if(S.extraW) rows.push({k:'A.I chấm Writing mua thêm', s:`Tổng ${c.t.wFree+S.extraW} câu/tài khoản · tính tiền ${S.extraW} câu × ${num(c.n)} tài khoản`, v:vnd(c.wCost)});
-  if(S.extraS) rows.push({k:'A.I chấm Speaking mua thêm', s:`Tổng ${c.t.sFree+S.extraS} câu/tài khoản · tính tiền ${S.extraS} câu × ${num(c.n)} tài khoản`, v:vnd(c.sCost)});
+  if(S.extraS) rows.push({k:'A.I chấm Speaking mua thêm', s:`Tổng ${c.t.sFree+S.extraS} part/tài khoản · tính tiền ${S.extraS} part × ${num(c.n)} tài khoản`, v:vnd(c.sCost)});
   if(S.entry) rows.push({k:'Lượt test đầu vào', s:`${num(S.entry)} lượt × ${num(CFG.entry)}đ · dùng chung cho trung tâm`, v:vnd(c.eCost)});
-  rows.push({k:'Lượt dùng vượt số đã mua', s:`Writing ${num(over(CFG.wExtra))}đ/câu · Speaking ${num(over(CFG.sExtra))}đ/câu · Thi full ${num(over(CFG.mock))}đ/bài · Test đầu vào ${num(over(CFG.entry))}đ/lượt`, v:`× ${ovrX()}`, cls:'over'});
+  rows.push({k:'Lượt dùng vượt số đã mua', s:`Writing ${num(over(CFG.wExtra))}đ/câu · Speaking ${num(over(CFG.sExtra))}đ/part · Thi full ${num(over(CFG.mock))}đ/bài · Test đầu vào ${num(over(CFG.entry))}đ/lượt`, v:`× ${ovrX()}`, cls:'over'});
   $('lines').innerHTML=rows.map(r=>`<div class="li ${r.cls||''}"><span class="k">${r.k}${r.s?`<small>${r.s}</small>`:''}</span><span class="v">${r.v}</span></div>`).join('');
 
   const saved=c.anchor-c.month, savedPct=c.anchor?Math.round(saved/c.anchor*100):0;
@@ -793,12 +793,12 @@ function controls(){
   $('students').value=n2pos(S.n);
   const rateLbl=(v,u)=>`${num(v)}đ / ${u} <span class="ovr">vượt ${num(over(v))}đ</span>`;
   $('wRate').innerHTML=rateLbl(CFG.wExtra,'câu');
-  $('sRate').innerHTML=rateLbl(CFG.sExtra,'câu');
+  $('sRate').innerHTML=rateLbl(CFG.sExtra,'part');
   $('mRate').innerHTML=rateLbl(CFG.mock,'bài');
   $('eRate').innerHTML=rateLbl(CFG.entry,'lượt');
   const wBase=c.t.wFree, sBase=c.t.sFree;
   $('extraW').min=wBase; $('extraW').max=wBase+24; $('extraW').value=wBase+S.extraW;
-  $('extraS').min=sBase; $('extraS').max=sBase+60; $('extraS').value=sBase+S.extraS;
+  $('extraS').min=sBase; $('extraS').max=sBase+20; $('extraS').value=sBase+S.extraS;
   setBox('extraWN',wBase+S.extraW); setBox('extraSN',sBase+S.extraS);
   $('mock').value=S.mockPer; setBox('mockN',S.mockPer);
   $('entry').value=S.entry; setBox('entryN',num(S.entry));
@@ -816,8 +816,8 @@ function overTable(){
   $('ovrFactorTxt').textContent=x;
   const rows=[
     ['A.I chấm Writing','1 câu = 1 bài Writing (1 Task)',CFG.wExtra,'câu'],
-    ['A.I chấm Speaking','1 câu = 1 câu hỏi Speaking có chấm điểm &amp; nhận xét',CFG.sExtra,'câu'],
-    ['Thi IELTS full 4 kỹ năng','10 câu Speaking + 2 Task Writing + Reading + Listening',CFG.mock,'bài'],
+    ['A.I chấm Speaking','1 part = 1 phần thi Speaking (1–4 câu) có chấm điểm &amp; nhận xét',CFG.sExtra,'part'],
+    ['Thi IELTS full 4 kỹ năng','3 part Speaking + 2 Task Writing + Reading + Listening',CFG.mock,'bài'],
     ['Test đầu vào','Phân loại trình độ người mới, không cần tạo tài khoản',CFG.entry,'lượt']
   ];
   $('overRows').innerHTML=rows.map(([k,s2,v,u])=>`<tr>
@@ -840,11 +840,11 @@ function internalPanel(){
   </tr>`).join('');
 
   const minis=[
-    ['wExtra','Writing mua thêm (đ/lượt)'],['sExtra','Speaking mua thêm (đ/câu)'],
+    ['wExtra','Writing mua thêm (đ/lượt)'],['sExtra','Speaking mua thêm (đ/part)'],
     ['mock','Thi full 4 kỹ năng (đ/bài)'],['entry','Test đầu vào (đ/lượt)'],
     ['overPct','Hệ số lượt vượt định mức (%)'],
-    ['mockS','Số câu Speaking trong 1 bài thi thử'],
-    ['cogsW','Chi phí thực 1 lượt Writing'],['cogsS','Chi phí thực 1 câu Speaking'],
+    ['mockS','Số part Speaking trong 1 bài thi full'],
+    ['cogsW','Chi phí thực 1 lượt Writing'],['cogsS','Chi phí thực 1 part Speaking'],
     ['cogsRL','Chi phí thực Reading + Listening'],['cogsEntry','Chi phí thực 1 test đầu vào']
   ];
   $('cfgMini').innerHTML=minis.map(([k,l])=>`<div><label>${l}</label><input data-g="${k}" value="${CFG[k]}"></div>`).join('');
@@ -879,19 +879,19 @@ function flags(){
   const rev0=c.fee+c.wCost+c.sCost+c.mCost+c.eCost;
   const gm=(rev0-c.cogs)/rev0;
   out.push(giftRetail>revPerHV
-    ? `<div class="flag warn"><b>Bậc ${t.no}: quà tặng đắt hơn giá bán.</b> ${t.wFree} Writing + ${t.sFree} Speaking tặng kèm có giá niêm yết ${vnd(giftRetail)}/HV, trong khi trung tâm chỉ trả ${vnd(revPerHV)}/HV. Trung tâm sẽ không bao giờ cần mua thêm lượt, và mức tặng này tự phá giá lượt lẻ. Cân nhắc giảm định mức tặng ở bậc cao (ví dụ 4/4 cho Bậc 1–2, 2/2 cho Bậc 4–5) hoặc nâng giá sàn bậc cuối.</div>`
+    ? `<div class="flag warn"><b>Bậc ${t.no}: quà tặng đắt hơn giá bán.</b> ${t.wFree} câu Writing + ${t.sFree} part Speaking đã gồm có giá niêm yết ${vnd(giftRetail)}/HV, trong khi trung tâm chỉ trả ${vnd(revPerHV)}/HV. Trung tâm sẽ không bao giờ cần mua thêm lượt, và mức tặng này tự phá giá lượt lẻ. Cân nhắc giảm định mức tặng ở bậc cao (ví dụ 4/4 cho Bậc 1–2, 2/2 cho Bậc 4–5) hoặc nâng giá sàn bậc cuối.</div>`
     : `<div class="flag ok">Bậc ${t.no}: quà tặng ${vnd(giftRetail)}/HV theo giá niêm yết, thấp hơn ${vnd(revPerHV)}/HV thu được. Còn dư địa để trung tâm mua thêm lượt.</div>`);
 
   // 3. biên gộp
   // 3. chênh giá giữa gói thi thử và mua lẻ
   const aLa=CFG.mockS*CFG.sExtra+CFG.mockW*CFG.wExtra;
   out.push(CFG.mock<CFG.mockS*CFG.sExtra
-    ? `<div class="flag warn"><b>Gói thi thử đang rẻ hơn cả phần Speaking mua lẻ.</b> ${CFG.mockS} câu Speaking lẻ = ${vnd(CFG.mockS*CFG.sExtra)}, trong khi cả bài thi thử 4 kỹ năng chỉ ${vnd(CFG.mock)}. Khách chỉ cần lượt Speaking sẽ mua thi thử thay vì mua lẻ, và dòng doanh thu Speaking coi như chết. Cần một trong hai: nâng giá thi thử lên tối thiểu ${vnd(CFG.mockS*CFG.sExtra)}, hoặc hạ giá Speaking xuống dưới ${vnd(CFG.mock/CFG.mockS)}/câu.</div>`
-    : `<div class="flag ok">Gói thi thử ${vnd(CFG.mock)} so với mua lẻ ${vnd(aLa)} — chiết khấu gói ${Math.round((1-CFG.mock/aLa)*100)}%, vẫn cao hơn ${CFG.mockS} câu Speaking lẻ (${vnd(CFG.mockS*CFG.sExtra)}) nên không bị mua vòng.</div>`);
+    ? `<div class="flag warn"><b>Gói thi thử đang rẻ hơn cả phần Speaking mua lẻ.</b> ${CFG.mockS} part Speaking lẻ = ${vnd(CFG.mockS*CFG.sExtra)}, trong khi cả bài thi thử 4 kỹ năng chỉ ${vnd(CFG.mock)}. Khách chỉ cần lượt Speaking sẽ mua thi thử thay vì mua lẻ, và dòng doanh thu Speaking coi như chết. Cần một trong hai: nâng giá thi thử lên tối thiểu ${vnd(CFG.mockS*CFG.sExtra)}, hoặc hạ giá Speaking xuống dưới ${vnd(CFG.mock/CFG.mockS)}/câu.</div>`
+    : `<div class="flag ok">Gói thi thử ${vnd(CFG.mock)} so với mua lẻ ${vnd(aLa)} — chiết khấu gói ${Math.round((1-CFG.mock/aLa)*100)}%, vẫn cao hơn ${CFG.mockS} part Speaking lẻ (${vnd(CFG.mockS*CFG.sExtra)}) nên không bị mua vòng.</div>`);
 
   // 4. biên gộp
   const wTot=c.wFreeQty+c.wQty+c.mQty*CFG.mockW, sTot=c.sFreeQty+c.sQty+c.mQty*CFG.mockS;
-  out.push(`<div class="flag ${gm<0.5?'warn':'ok'}"><b>Biên gộp ước tính ${(gm*100).toFixed(0)}%.</b> Chi phí A.I thực tế ${vnd(c.cogs)}/tháng — ${num(wTot)} lượt Writing × ${num(CFG.cogsW)}đ + ${num(sTot)} câu Speaking × ${num(CFG.cogsS)}đ${c.mQty?` + ${num(c.mQty)} bài R&amp;L × ${num(CFG.cogsRL)}đ`:''}${c.eQty?` + ${num(c.eQty)} test đầu vào × ${num(CFG.cogsEntry)}đ`:''} — trên doanh thu ${vnd(rev0)}. Sửa các ô chi phí thực ở trên theo giá API thật để ra con số đúng.</div>`);
+  out.push(`<div class="flag ${gm<0.5?'warn':'ok'}"><b>Biên gộp ước tính ${(gm*100).toFixed(0)}%.</b> Chi phí A.I thực tế ${vnd(c.cogs)}/tháng — ${num(wTot)} lượt Writing × ${num(CFG.cogsW)}đ + ${num(sTot)} part Speaking × ${num(CFG.cogsS)}đ${c.mQty?` + ${num(c.mQty)} bài R&amp;L × ${num(CFG.cogsRL)}đ`:''}${c.eQty?` + ${num(c.eQty)} test đầu vào × ${num(CFG.cogsEntry)}đ`:''} — trên doanh thu ${vnd(rev0)}. Sửa các ô chi phí thực ở trên theo giá API thật để ra con số đúng.</div>`);
 
   $('flags').innerHTML=out.join('');
 }
@@ -960,7 +960,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   bindNum('students','studentsN',v=>{S.n=Math.max(SMIN,Math.min(SMAX,v));render();},pos2n);
   bindNum('extraW','extraWN',v=>{const b=tierOf(S.n).wFree;S.extraW=Math.max(0,Math.min(24,v-b));render();});
-  bindNum('extraS','extraSN',v=>{const b=tierOf(S.n).sFree;S.extraS=Math.max(0,Math.min(60,v-b));render();});
+  bindNum('extraS','extraSN',v=>{const b=tierOf(S.n).sFree;S.extraS=Math.max(0,Math.min(20,v-b));render();});
   bindNum('mock','mockN',v=>{S.mockPer=Math.max(0,Math.min(60,v));render();});
   bindNum('entry','entryN',v=>{S.entry=Math.max(0,Math.min(50000,v));render();});
 
@@ -970,11 +970,11 @@ document.addEventListener('DOMContentLoaded',()=>{
     const txt=`BÁO GIÁ IELTSSMART — NOVAFORGE
 Quy mô: ${num(c.n)} tài khoản học viên chính thức (Bậc ${c.t.no} · ${num(c.t.price)}đ/tài khoản)
 Phí nền tảng: ${vnd(c.fee)}
-Đã gồm mỗi tài khoản: ${c.t.wFree} câu Writing + ${c.t.sFree} câu Speaking + 500MB lưu trữ
-${S.mockPer?`Thi IELTS full 4 kỹ năng: ${S.mockPer} bài/tài khoản = ${vnd(c.mCost)}\n`:''}${S.extraW?`Writing mua thêm: ${S.extraW} câu/tài khoản = ${vnd(c.wCost)}\n`:''}${S.extraS?`Speaking mua thêm: ${S.extraS} câu/tài khoản = ${vnd(c.sCost)}\n`:''}${S.entry?`Test đầu vào: ${num(S.entry)} lượt (dùng chung trung tâm) = ${vnd(c.eCost)}\n`:''}Cam kết ${c.term.m} tháng${c.term.d?` (chiết khấu ${Math.round(c.term.d*100)}%)`:''}
+Đã gồm mỗi tài khoản: ${c.t.wFree} câu Writing + ${c.t.sFree} part Speaking + 500MB lưu trữ
+${S.mockPer?`Thi IELTS full 4 kỹ năng: ${S.mockPer} bài/tài khoản = ${vnd(c.mCost)}\n`:''}${S.extraW?`Writing mua thêm: ${S.extraW} câu/tài khoản = ${vnd(c.wCost)}\n`:''}${S.extraS?`Speaking mua thêm: ${S.extraS} part/tài khoản = ${vnd(c.sCost)}\n`:''}${S.entry?`Test đầu vào: ${num(S.entry)} lượt (dùng chung trung tâm) = ${vnd(c.eCost)}\n`:''}Cam kết ${c.term.m} tháng${c.term.d?` (chiết khấu ${Math.round(c.term.d*100)}%)`:''}
 THÀNH TIỀN: ${vnd(c.month)}/tháng — ${vnd(c.month/c.n)}/tài khoản
 Tổng cả kỳ: ${vnd(c.month*c.term.m)}
-Lượt dùng vượt số đã mua (× ${ovrX()}): Writing ${num(over(CFG.wExtra))}đ/câu · Speaking ${num(over(CFG.sExtra))}đ/câu · Thi full 4 kỹ năng ${num(over(CFG.mock))}đ/bài · Test đầu vào ${num(over(CFG.entry))}đ/lượt
+Lượt dùng vượt số đã mua (× ${ovrX()}): Writing ${num(over(CFG.wExtra))}đ/câu · Speaking ${num(over(CFG.sExtra))}đ/part · Thi full 4 kỹ năng ${num(over(CFG.mock))}đ/bài · Test đầu vào ${num(over(CFG.entry))}đ/lượt
 (Giá chưa gồm VAT)`;
     navigator.clipboard.writeText(txt).then(()=>{
       const b=$('btnCopy'); b.textContent='Đã sao chép'; setTimeout(()=>b.textContent='Sao chép',1600);
