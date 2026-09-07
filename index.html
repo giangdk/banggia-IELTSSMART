@@ -156,6 +156,37 @@ input[type=range]:focus-visible{box-shadow:0 0 0 3px var(--teal-s)}
 .addon-result .ar-cost{font-weight:700;color:var(--teal-d)}
 .addon-result .ar-cost.muted{color:var(--ink3);font-weight:500}
 
+/* ---------- vượt định mức ---------- */
+.ovr{
+  font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.02em;
+  background:var(--rust-s);color:var(--rust);border:1px solid #F0CFC2;
+  padding:1px 6px;border-radius:5px;margin-left:6px;white-space:nowrap;
+}
+.over-lead{
+  display:flex;gap:10px;align-items:flex-start;background:var(--rust-s);
+  border:1px solid #F0CFC2;border-radius:8px;padding:12px 14px;margin-bottom:14px;
+}
+.over-lead .x{color:var(--rust);font-weight:800;font-size:13px;line-height:1.5;flex:none}
+.over-lead b{display:block;font-size:14px;color:#7A2E17;letter-spacing:-.01em}
+.over-lead span{display:block;font-size:12.5px;color:#8A4630;margin-top:3px;line-height:1.5}
+.over-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.over-tbl th{
+  text-align:left;font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--ink3);padding:0 10px 8px;border-bottom:1px solid var(--line);
+}
+.over-tbl th:nth-child(2),.over-tbl th:nth-child(3){text-align:right}
+.over-tbl td{padding:11px 10px;border-bottom:1px solid var(--line2);vertical-align:top}
+.over-tbl tr:last-child td{border-bottom:0}
+.over-tbl .oname{font-weight:600}
+.over-tbl .oname small{display:block;font-weight:400;font-size:11.5px;color:var(--ink3);margin-top:2px}
+.over-tbl .obuy,.over-tbl .oover{
+  text-align:right;font-family:var(--mono);font-weight:600;white-space:nowrap;width:130px;
+}
+.over-tbl .obuy{color:var(--teal-d)}
+.over-tbl .oover{color:var(--rust)}
+.over-tbl .obuy small,.over-tbl .oover small{display:block;font-weight:500;font-size:10.5px;color:var(--ink3);margin-top:2px}
+@media(max-width:640px){ .over-tbl .obuy,.over-tbl .oover{width:auto} }
+
 .seg{display:flex;gap:6px;flex-wrap:wrap}
 .seg button{
   flex:1;min-width:78px;padding:10px 8px;border-radius:8px;border:1px solid var(--line);
@@ -262,6 +293,8 @@ input[type=range]:focus-visible{box-shadow:0 0 0 3px var(--teal-s)}
 .li .k small{display:block;color:#7A9296;font-size:11.5px;margin-top:1px}
 .li .v{font-family:var(--mono);font-size:14px;color:#fff;white-space:nowrap}
 .li.free .v{color:#7FC9BB}
+.li.over .v{color:#F2A98A;font-size:13px}
+.li.over .k{color:#C9A99E}
 .li.zero{opacity:.45}
 .anchor-line{display:flex;justify-content:space-between;gap:14px;padding:12px 0 0;font-size:13px;color:#A9BEC1}
 .anchor-line .v{font-family:var(--mono);text-decoration:line-through;color:#7A9296}
@@ -392,19 +425,19 @@ svg{display:block;width:100%;height:auto}
 
     <!-- A.I -->
     <section class="card">
-      <h2>Lượt chấm A.I — mua theo tài khoản</h2>
-      <p class="sub">Mỗi học viên chính thức là một tài khoản. Kéo thanh trượt để chọn định mức cho <b>một tài khoản</b> — thành tiền của cả trung tâm hiện ở khung Chi tiết giá. Lượt mua thêm cộng dồn, dùng linh hoạt suốt thời gian đăng ký.</p>
+      <h2>Lượt chấm bài theo tài khoản</h2>
+      <p class="sub">Mỗi học viên chính thức là một tài khoản. Kéo thanh trượt để chọn số lượt mua trước cho <b>một tài khoản</b> — thành tiền của cả trung tâm hiện ở khung Chi tiết giá. Lượt đã mua cộng dồn, dùng linh hoạt suốt thời gian đăng ký. Dùng vượt số đã mua vẫn chạy bình thường và được tính theo <b>hệ số 1,5</b>.</p>
 
       <div class="field">
         <div class="field-head">
           <label for="extraW">A.I chấm Writing</label>
           <span class="mono" style="font-size:12.5px;color:var(--ink3)" id="wRate"></span>
         </div>
-        <p class="field-hint">1 lượt = 1 bài Writing.</p>
+        <p class="field-hint">1 câu = 1 bài Writing (1 Task) có chấm điểm &amp; nhận xét theo band descriptor.</p>
         <div class="rowc">
           <input type="range" id="extraW" min="4" max="28" step="1" value="4">
           <input type="text" inputmode="numeric" class="numbox" id="extraWN" value="4">
-          <span class="unit">lượt / tài khoản</span>
+          <span class="unit">câu / tài khoản</span>
         </div>
         <div class="addon-result" id="wResult"></div>
       </div>
@@ -426,9 +459,12 @@ svg{display:block;width:100%;height:auto}
 
     <!-- Tùy chọn thêm -->
     <section class="card">
+      <h2>Lượt thi IELTS full 4 kỹ năng &amp; test đầu vào</h2>
+      <p class="sub">Lượt thi mua theo tài khoản, lượt test đầu vào mua chung cho trung tâm. Cả hai đều áp <b>hệ số 1,5</b> cho phần dùng vượt số đã mua.</p>
+
       <div class="field">
         <div class="field-head">
-          <label for="mock">Lượt thi thử IELTS full 4 kỹ năng</label>
+          <label for="mock">Lượt thi IELTS full 4 kỹ năng</label>
           <span class="mono" style="font-size:12.5px;color:var(--ink3)" id="mRate"></span>
         </div>
         <p class="field-hint">1 lượt = 1 đề hoàn chỉnh: <b>10 câu Speaking + 2 Task Writing + Reading + Listening</b>, có báo cáo band tổng và band từng kỹ năng.</p>
@@ -453,6 +489,26 @@ svg{display:block;width:100%;height:auto}
         </div>
         <div class="scale"><span>+0</span><span id="eCalc"></span><span>+2.000</span></div>
       </div>
+    </section>
+
+    <!-- Giá lượt vượt định mức -->
+    <section class="card">
+      <div class="eyebrow">Vượt số lượt đã mua</div>
+      <h2 style="margin-top:6px">Bảng giá lượt dùng vượt định mức</h2>
+      <p class="sub">Hệ thống không khoá học viên khi hết lượt. Phần dùng vượt vẫn chạy bình thường, được ghi nhận riêng và tính vào hoá đơn kỳ kế tiếp theo hệ số <b id="ovrFactorTxt">1,5</b> lần đơn giá đã mua.</p>
+
+      <div class="over-lead">
+        <span class="x">!</span>
+        <div>
+          <b>Mua trước luôn rẻ hơn dùng vượt</b>
+          <span>Nếu tháng nào cũng vượt, hãy nâng định mức mua trước ở các thanh trượt phía trên để về lại đơn giá gốc.</span>
+        </div>
+      </div>
+
+      <table class="over-tbl">
+        <thead><tr><th>Hạng mục</th><th>Giá mua trước</th><th>Giá khi vượt</th></tr></thead>
+        <tbody id="overRows"></tbody>
+      </table>
     </section>
 
     <!-- Tính năng đi kèm -->
@@ -635,7 +691,7 @@ svg{display:block;width:100%;height:auto}
 </div>
 
 <div class="foot">
-  Giá chưa gồm VAT. Báo giá tham khảo, hiệu lực 30 ngày kể từ ngày xuất. Lượt chấm A.I mua thêm được cộng dồn, không giới hạn theo tháng và dùng được trong suốt thời gian đăng ký.
+  Giá chưa gồm VAT. Báo giá tham khảo, hiệu lực 30 ngày kể từ ngày xuất. Lượt chấm A.I mua thêm được cộng dồn, không giới hạn theo tháng và dùng được trong suốt thời gian đăng ký. Lượt dùng vượt số đã mua được ghi nhận riêng và tính vào hoá đơn kỳ kế tiếp theo hệ số 1,5 lần đơn giá mua trước.
 </div>
 
 <script>
@@ -648,7 +704,8 @@ const CFG = {
     {no:4, min:300,  max:999,    price:36750, wFree:4, sFree:4},
     {no:5, min:1000, max:100000, price:35750, wFree:4, sFree:4}
   ],
-  wExtra:2100, sExtra:3000, mock:27000, entry:13000,
+  wExtra:2500, sExtra:3000, mock:27000, entry:13000,
+  overPct:150,                  // lượt dùng vượt số đã mua = 150% đơn giá mua trước
   mockS:10, mockW:1,            // 1 bài thi thử = 10 câu Speaking + 1 lượt Writing (2 Task) + R + L
   cogsW:600,  cogsS:700, cogsRL:200, cogsEntry:3000,
   freeMBperStudent:500,
@@ -662,6 +719,9 @@ const SMIN=25, SMAX=100000;
 const vnd = v => Math.round(v).toLocaleString('vi-VN')+'đ';
 const num = v => Math.round(v).toLocaleString('vi-VN');
 const $ = id => document.getElementById(id);
+/* đơn giá cho phần dùng vượt số lượt đã mua */
+const over = v => Math.round(v*CFG.overPct/100);
+const ovrX = () => (CFG.overPct/100).toLocaleString('vi-VN');
 
 /* ---- slider log ---- */
 const pos2n = p => { const t=p/1000, raw=SMIN*Math.pow(SMAX/SMIN,t);
@@ -731,13 +791,14 @@ function ladder(){
 
 function invoice(){
   const c=calc(), rows=[];
-  rows.push({k:`Tài khoản học viên chính thức (${num(c.n)})`, s:`Đã gồm ${c.t.wFree} lượt Writing + ${c.t.sFree} câu Speaking / tài khoản`, v:vnd(c.fee)});
-  rows.push({k:'Lưu trữ đi kèm', s:`500 MB / tài khoản`, v:'Miễn phí', free:1});
-  if(S.mockPer) rows.push({k:'Thi thử IELTS full 4 kỹ năng', s:`${S.mockPer} bài / tài khoản × ${num(c.n)} tài khoản`, v:vnd(c.mCost)});
-  if(S.extraW) rows.push({k:'A.I Writing vượt định mức', s:`Tổng ${c.t.wFree+S.extraW} lượt/tài khoản · tính tiền ${S.extraW} lượt × ${num(c.n)} tài khoản`, v:vnd(c.wCost)});
-  if(S.extraS) rows.push({k:'A.I Speaking vượt định mức', s:`Tổng ${c.t.sFree+S.extraS} câu/tài khoản · tính tiền ${S.extraS} câu × ${num(c.n)} tài khoản`, v:vnd(c.sCost)});
+  rows.push({k:`Tài khoản học viên chính thức (${num(c.n)})`, s:`Đã gồm ${c.t.wFree} câu Writing + ${c.t.sFree} câu Speaking / tài khoản`, v:vnd(c.fee)});
+  rows.push({k:'Lưu trữ đi kèm', s:`500 MB / tài khoản`, v:'Miễn phí', cls:'free'});
+  if(S.mockPer) rows.push({k:'Lượt thi IELTS full 4 kỹ năng', s:`${S.mockPer} bài / tài khoản × ${num(c.n)} tài khoản`, v:vnd(c.mCost)});
+  if(S.extraW) rows.push({k:'A.I chấm Writing mua thêm', s:`Tổng ${c.t.wFree+S.extraW} câu/tài khoản · tính tiền ${S.extraW} câu × ${num(c.n)} tài khoản`, v:vnd(c.wCost)});
+  if(S.extraS) rows.push({k:'A.I chấm Speaking mua thêm', s:`Tổng ${c.t.sFree+S.extraS} câu/tài khoản · tính tiền ${S.extraS} câu × ${num(c.n)} tài khoản`, v:vnd(c.sCost)});
   if(S.entry) rows.push({k:'Lượt test đầu vào', s:`${num(S.entry)} lượt × ${num(CFG.entry)}đ · dùng chung cho trung tâm`, v:vnd(c.eCost)});
-  $('lines').innerHTML=rows.map(r=>`<div class="li ${r.free?'free':''}"><span class="k">${r.k}${r.s?`<small>${r.s}</small>`:''}</span><span class="v">${r.v}</span></div>`).join('');
+  rows.push({k:'Lượt dùng vượt số đã mua', s:`Writing ${num(over(CFG.wExtra))}đ/câu · Speaking ${num(over(CFG.sExtra))}đ/câu · Thi full ${num(over(CFG.mock))}đ/bài · Test đầu vào ${num(over(CFG.entry))}đ/lượt`, v:`× ${ovrX()}`, cls:'over'});
+  $('lines').innerHTML=rows.map(r=>`<div class="li ${r.cls||''}"><span class="k">${r.k}${r.s?`<small>${r.s}</small>`:''}</span><span class="v">${r.v}</span></div>`).join('');
 
   const saved=c.anchor-c.month, savedPct=c.anchor?Math.round(saved/c.anchor*100):0;
   $('anchorNote').textContent=`${num(c.n)} HV × ${num(CFG.tiers[0].price)}đ + tùy chọn`;
@@ -758,24 +819,25 @@ function controls(){
   const c=calc();
   setBox('studentsN',num(S.n));
   $('students').value=n2pos(S.n);
-  $('wRate').textContent=`${num(CFG.wExtra)}đ / lượt`;
-  $('sRate').textContent=`${num(CFG.sExtra)}đ / câu`;
-  $('mRate').textContent=`${num(CFG.mock)}đ / bài`;
-  $('eRate').textContent=`${num(CFG.entry)}đ / lượt`;
+  const rateLbl=(v,u)=>`${num(v)}đ / ${u} <span class="ovr">vượt ${num(over(v))}đ</span>`;
+  $('wRate').innerHTML=rateLbl(CFG.wExtra,'câu');
+  $('sRate').innerHTML=rateLbl(CFG.sExtra,'câu');
+  $('mRate').innerHTML=rateLbl(CFG.mock,'bài');
+  $('eRate').innerHTML=rateLbl(CFG.entry,'lượt');
   const wBase=c.t.wFree, sBase=c.t.sFree;
   $('extraW').min=wBase; $('extraW').max=wBase+24; $('extraW').value=wBase+S.extraW;
   $('extraS').min=sBase; $('extraS').max=sBase+60; $('extraS').value=sBase+S.extraS;
   setBox('extraWN',wBase+S.extraW); setBox('extraSN',sBase+S.extraS);
   $('mock').value=S.mockPer; setBox('mockN',S.mockPer);
   $('entry').value=S.entry; setBox('entryN',num(S.entry));
-  $('eCalc').textContent=S.entry?`${num(S.entry)} lượt = ${vnd(c.eCost)}`:'chưa mua';
+  $('eCalc').textContent=S.entry?`${num(S.entry)} lượt = ${vnd(c.eCost)} · vượt ${num(over(CFG.entry))}đ/lượt`:`chưa mua · vượt ${num(over(CFG.entry))}đ/lượt`;
 
   const giftResult=(unit,base,extra,rate)=>
-    `<span class="ar-parts"><b>${base}</b> tặng${extra?` + <b>${extra}</b> mua thêm`:''} = <b>${base+extra}</b> ${unit}/tài khoản</span>
-     <span class="ar-cost${extra?'':' muted'}">${extra?vnd(extra*rate)+' / tài khoản':'chỉ dùng lượt tặng'}</span>`;
-  $('wResult').innerHTML=giftResult('lượt',wBase,S.extraW,CFG.wExtra);
+    `<span class="ar-parts"><b>${base}</b> đã gồm${extra?` + <b>${extra}</b> mua thêm`:''} = <b>${base+extra}</b> ${unit}/tài khoản · vượt tính ${num(over(rate))}đ</span>
+     <span class="ar-cost${extra?'':' muted'}">${extra?vnd(extra*rate)+' / tài khoản':'chỉ dùng lượt đã gồm'}</span>`;
+  $('wResult').innerHTML=giftResult('câu',wBase,S.extraW,CFG.wExtra);
   $('sResult').innerHTML=giftResult('câu',sBase,S.extraS,CFG.sExtra);
-  $('mResult').innerHTML=`<span class="ar-parts"><b>${S.mockPer}</b> bài/tài khoản</span>
+  $('mResult').innerHTML=`<span class="ar-parts"><b>${S.mockPer}</b> bài/tài khoản · vượt tính ${num(over(CFG.mock))}đ/bài</span>
      <span class="ar-cost${S.mockPer?'':' muted'}">${S.mockPer?vnd(S.mockPer*CFG.mock)+' / tài khoản':'chưa mua'}</span>`;
   document.querySelectorAll('#modeSwitch button').forEach(b=>b.classList.toggle('on',b.dataset.mode===CFG.mode));
   document.querySelectorAll('#termSeg button').forEach(b=>b.classList.toggle('on',+b.dataset.m===S.term));
@@ -784,6 +846,22 @@ function controls(){
     const el=$(id); const p=(el.value-el.min)/(el.max-el.min)*100;
     el.style.setProperty('--fill',p+'%');
   });
+}
+
+function overTable(){
+  const x=ovrX();
+  $('ovrFactorTxt').textContent=x;
+  const rows=[
+    ['A.I chấm Writing','1 câu = 1 bài Writing (1 Task)',CFG.wExtra,'câu'],
+    ['A.I chấm Speaking','1 câu = 1 câu hỏi Speaking có chấm điểm &amp; nhận xét',CFG.sExtra,'câu'],
+    ['Thi IELTS full 4 kỹ năng','10 câu Speaking + 2 Task Writing + Reading + Listening',CFG.mock,'bài'],
+    ['Test đầu vào','Phân loại trình độ người mới, không cần tạo tài khoản',CFG.entry,'lượt']
+  ];
+  $('overRows').innerHTML=rows.map(([k,s2,v,u])=>`<tr>
+    <td class="oname">${k}<small>${s2}</small></td>
+    <td class="obuy">${num(v)}đ<small>/ ${u}</small></td>
+    <td class="oover">${num(over(v))}đ<small>× ${x} · / ${u}</small></td>
+  </tr>`).join('');
 }
 
 /* ---- panel nội bộ ---- */
@@ -800,7 +878,8 @@ function internalPanel(){
 
   const minis=[
     ['wExtra','Writing mua thêm (đ/lượt)'],['sExtra','Speaking mua thêm (đ/câu)'],
-    ['mock','Thi thử full 4 kỹ năng (đ/bài)'],['entry','Test đầu vào (đ/lượt)'],
+    ['mock','Thi full 4 kỹ năng (đ/bài)'],['entry','Test đầu vào (đ/lượt)'],
+    ['overPct','Hệ số lượt vượt định mức (%)'],
     ['mockS','Số câu Speaking trong 1 bài thi thử'],
     ['cogsW','Chi phí thực 1 lượt Writing'],['cogsS','Chi phí thực 1 câu Speaking'],
     ['cogsRL','Chi phí thực Reading + Listening'],['cogsEntry','Chi phí thực 1 test đầu vào']
@@ -876,7 +955,7 @@ function curve(){
 function setStudents(n){ S.n=Math.max(SMIN,Math.min(SMAX,Math.round(n)||SMIN)); render(); }
 
 function render(rebuildInternal=true){
-  ladder(); invoice(); controls();
+  ladder(); invoice(); controls(); overTable();
   if($('internal').open||rebuildInternal){ flags(); curve(); }
 }
 
@@ -931,10 +1010,11 @@ document.addEventListener('DOMContentLoaded',()=>{
     const txt=`BÁO GIÁ IELTSSMART — NOVAFORGE
 Quy mô: ${num(c.n)} tài khoản học viên chính thức (Bậc ${c.t.no} · ${num(c.t.price)}đ/tài khoản)
 Phí nền tảng: ${vnd(c.fee)}
-Tặng sẵn mỗi tài khoản: ${c.t.wFree} lượt Writing + ${c.t.sFree} câu Speaking + 500MB lưu trữ
-${S.mockPer?`Thi thử IELTS: ${S.mockPer} bài/tài khoản = ${vnd(c.mCost)}\n`:''}${S.extraW?`Writing mua thêm: ${S.extraW} lượt/tài khoản = ${vnd(c.wCost)}\n`:''}${S.extraS?`Speaking mua thêm: ${S.extraS} câu/tài khoản = ${vnd(c.sCost)}\n`:''}${S.entry?`Test đầu vào: ${num(S.entry)} lượt (dùng chung trung tâm) = ${vnd(c.eCost)}\n`:''}Cam kết ${c.term.m} tháng${c.term.d?` (chiết khấu ${Math.round(c.term.d*100)}%)`:''}
+Đã gồm mỗi tài khoản: ${c.t.wFree} câu Writing + ${c.t.sFree} câu Speaking + 500MB lưu trữ
+${S.mockPer?`Thi IELTS full 4 kỹ năng: ${S.mockPer} bài/tài khoản = ${vnd(c.mCost)}\n`:''}${S.extraW?`Writing mua thêm: ${S.extraW} câu/tài khoản = ${vnd(c.wCost)}\n`:''}${S.extraS?`Speaking mua thêm: ${S.extraS} câu/tài khoản = ${vnd(c.sCost)}\n`:''}${S.entry?`Test đầu vào: ${num(S.entry)} lượt (dùng chung trung tâm) = ${vnd(c.eCost)}\n`:''}Cam kết ${c.term.m} tháng${c.term.d?` (chiết khấu ${Math.round(c.term.d*100)}%)`:''}
 THÀNH TIỀN: ${vnd(c.month)}/tháng — ${vnd(c.month/c.n)}/tài khoản
 Tổng cả kỳ: ${vnd(c.month*c.term.m)}
+Lượt dùng vượt số đã mua (× ${ovrX()}): Writing ${num(over(CFG.wExtra))}đ/câu · Speaking ${num(over(CFG.sExtra))}đ/câu · Thi full 4 kỹ năng ${num(over(CFG.mock))}đ/bài · Test đầu vào ${num(over(CFG.entry))}đ/lượt
 (Giá chưa gồm VAT)`;
     navigator.clipboard.writeText(txt).then(()=>{
       const b=$('btnCopy'); b.textContent='Đã sao chép'; setTimeout(()=>b.textContent='Sao chép',1600);
