@@ -139,23 +139,8 @@ input[type=range]:focus-visible{box-shadow:0 0 0 3px var(--teal-s)}
 .numbox:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-s)}
 .unit{flex:none;width:88px;font-size:12px;color:var(--ink3);line-height:1.25}
 .scale{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:11px;color:var(--ink3);margin-top:6px}
-.scale span:nth-child(2){color:var(--teal);font-weight:500;text-align:center;flex:1}
-.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
-.chip{
-  font-family:var(--mono);font-size:12px;padding:4px 10px;border-radius:999px;cursor:pointer;
-  border:1px solid var(--line);background:var(--surface);color:var(--ink2);
-}
-.chip:hover{border-color:var(--teal);color:var(--teal)}
-.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.scale span:nth-child(2):not(:last-child){color:var(--teal);font-weight:500;text-align:center;flex:1}
 
-.addon-result{
-  margin-top:11px;background:#F7F9F9;border:1px solid var(--line2);border-radius:8px;
-  padding:9px 13px;font-family:var(--mono);font-size:12.5px;color:var(--ink2);
-  display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:5px 14px;
-}
-.addon-result .ar-parts b{font-weight:700;color:var(--ink)}
-.addon-result .ar-cost{font-weight:700;color:var(--teal-d)}
-.addon-result .ar-cost.muted{color:var(--ink3);font-weight:500}
 
 /* ---------- vượt định mức ---------- */
 .ovr{
@@ -406,27 +391,24 @@ svg{display:block;width:100%;height:auto}
       </div>
     </section>
 
-    <!-- Quy mô -->
+    <!-- Các lựa chọn -->
     <section class="card">
+      <div class="eyebrow">Tuỳ chọn báo giá</div>
+      <h2 style="margin:6px 0 14px">Chọn quy mô và định mức sử dụng</h2>
+
       <div class="field">
         <div class="field-head">
           <label for="students">Số học viên chính thức / tháng</label>
           <span class="mono" id="unitPrice" style="font-size:13px;color:var(--teal)"></span>
         </div>
-        <p class="field-hint">Tối thiểu 25 học viên. Mỗi học viên chính thức tương ứng một tài khoản đăng nhập. Có thể chuyển sang trạng thái lưu trữ và khôi phục khi cần.</p>
+        <p class="field-hint">Tối thiểu 25 học viên. Mỗi học viên chính thức tương ứng một tài khoản đăng nhập.</p>
         <div class="rowc">
           <input type="range" id="students" min="0" max="1000" value="0">
           <input type="text" inputmode="numeric" class="numbox" id="studentsN" value="152">
+          <span class="unit">học viên</span>
         </div>
         <div class="scale"><span>25</span><span>100.000</span></div>
-        <div class="chips" id="sizeChips"></div>
       </div>
-
-    </section>
-
-    <!-- A.I -->
-    <section class="card">
-      <h2>Lượt chấm bài theo tài khoản</h2>
 
       <div class="field">
         <div class="field-head">
@@ -439,7 +421,6 @@ svg{display:block;width:100%;height:auto}
           <input type="text" inputmode="numeric" class="numbox" id="extraWN" value="4">
           <span class="unit">câu / tài khoản</span>
         </div>
-        <div class="addon-result" id="wResult"></div>
       </div>
 
       <div class="field">
@@ -447,19 +428,13 @@ svg{display:block;width:100%;height:auto}
           <label for="extraS">A.I chấm Speaking</label>
           <span class="mono" style="font-size:12.5px;color:var(--ink3)" id="sRate"></span>
         </div>
-        <p class="field-hint">1 lượt = 1 câu hỏi Speaking có chấm điểm &amp; nhận xét.</p>
+        <p class="field-hint">1 câu = 1 câu hỏi Speaking có chấm điểm &amp; nhận xét.</p>
         <div class="rowc">
           <input type="range" id="extraS" min="4" max="64" step="1" value="4">
           <input type="text" inputmode="numeric" class="numbox" id="extraSN" value="4">
           <span class="unit">câu / tài khoản</span>
         </div>
-        <div class="addon-result" id="sResult"></div>
       </div>
-    </section>
-
-    <!-- Tùy chọn thêm -->
-    <section class="card">
-      <h2>Lượt thi IELTS full 4 kỹ năng &amp; test đầu vào</h2>
 
       <div class="field">
         <div class="field-head">
@@ -472,7 +447,6 @@ svg{display:block;width:100%;height:auto}
           <input type="text" inputmode="numeric" class="numbox" id="mockN" value="0">
           <span class="unit">bài / tài khoản</span>
         </div>
-        <div class="addon-result" id="mResult"></div>
       </div>
 
       <div class="field">
@@ -480,16 +454,15 @@ svg{display:block;width:100%;height:auto}
           <label for="entry">Lượt test đầu vào</label>
           <span class="mono" style="font-size:12.5px;color:var(--ink3)" id="eRate"></span>
         </div>
-        <p class="field-hint">Dùng để phân loại trình độ người mới trước khi xếp lớp. Lượt mua thuộc về trung tâm, dùng cho bất kỳ ai — không cần tạo tài khoản học viên.</p>
+        <p class="field-hint">Phân loại trình độ người mới trước khi xếp lớp. Lượt mua thuộc về trung tâm, dùng cho bất kỳ ai — không cần tạo tài khoản học viên.</p>
         <div class="rowc">
           <input type="range" id="entry" min="0" max="2000" step="10" value="0">
           <input type="text" inputmode="numeric" class="numbox" id="entryN" value="0">
           <span class="unit">lượt / trung tâm</span>
         </div>
-        <div class="scale"><span>+0</span><span id="eCalc"></span><span>+2.000</span></div>
+        <div class="scale"><span>+0</span><span>+2.000</span></div>
       </div>
     </section>
-
     <!-- Giá lượt vượt định mức -->
     <section class="card">
       <div class="eyebrow">Vượt số lượt đã mua</div>
@@ -829,18 +802,9 @@ function controls(){
   setBox('extraWN',wBase+S.extraW); setBox('extraSN',sBase+S.extraS);
   $('mock').value=S.mockPer; setBox('mockN',S.mockPer);
   $('entry').value=S.entry; setBox('entryN',num(S.entry));
-  $('eCalc').textContent=S.entry?`${num(S.entry)} lượt = ${vnd(c.eCost)} · vượt ${num(over(CFG.entry))}đ/lượt`:`chưa mua · vượt ${num(over(CFG.entry))}đ/lượt`;
 
-  const giftResult=(unit,base,extra,rate)=>
-    `<span class="ar-parts"><b>${base}</b> đã gồm${extra?` + <b>${extra}</b> mua thêm`:''} = <b>${base+extra}</b> ${unit}/tài khoản · vượt tính ${num(over(rate))}đ</span>
-     <span class="ar-cost${extra?'':' muted'}">${extra?vnd(extra*rate)+' / tài khoản':'chỉ dùng lượt đã gồm'}</span>`;
-  $('wResult').innerHTML=giftResult('câu',wBase,S.extraW,CFG.wExtra);
-  $('sResult').innerHTML=giftResult('câu',sBase,S.extraS,CFG.sExtra);
-  $('mResult').innerHTML=`<span class="ar-parts"><b>${S.mockPer}</b> bài/tài khoản · vượt tính ${num(over(CFG.mock))}đ/bài</span>
-     <span class="ar-cost${S.mockPer?'':' muted'}">${S.mockPer?vnd(S.mockPer*CFG.mock)+' / tài khoản':'chưa mua'}</span>`;
   document.querySelectorAll('#modeSwitch button').forEach(b=>b.classList.toggle('on',b.dataset.mode===CFG.mode));
   document.querySelectorAll('#termSeg button').forEach(b=>b.classList.toggle('on',+b.dataset.m===S.term));
-  document.querySelectorAll('#sizeChips .chip').forEach(b=>b.classList.toggle('on',+b.dataset.s===S.n));
   ['students','extraW','extraS','mock','entry'].forEach(id=>{
     const el=$(id); const p=(el.value-el.min)/(el.max-el.min)*100;
     el.style.setProperty('--fill',p+'%');
@@ -969,9 +933,6 @@ function bindNum(sliderId,inputId,onVal,fromPos){
 
 document.addEventListener('DOMContentLoaded',()=>{
   $('today').textContent=new Date().toLocaleDateString('vi-VN');
-
-  $('sizeChips').innerHTML=[30,80,152,500,2000,15000].map(s=>`<button class="chip" data-s="${s}">${num(s)} HV</button>`).join('');
-  document.querySelectorAll('#sizeChips .chip').forEach(b=>b.onclick=()=>setStudents(+b.dataset.s));
 
   $('feats').innerHTML=[
     'Phòng thi ảo đủ 4 kỹ năng Listening, Reading, Writing, Speaking',
